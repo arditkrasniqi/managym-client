@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import config from '../config'
-import axios from 'axios'
 
 Vue.use(Vuex);
 
@@ -117,16 +115,8 @@ export const store = new Vuex.Store({
 
         // front page settings
         // front page trainer search
-        setTrainers:({commit},city) => {
-            setTimeout(function(){
-                $.get('https://maps.googleapis.com/maps/api/geocode/json?address='+city+'&key='+config.google_api_key,function(response){
-                    let pos = response.results[0].geometry.location;
-                    axios.post(config.api_hostname + '/search-guest',{latitude:pos.lat,longitude:pos.lng})
-                        .then(response => {
-                            commit('setTrainers',response.data.data);
-                        });
-                });
-            },100);
+        setTrainers: ({commit}, trainers) => {
+            commit('setTrainers', trainers);
         },
 
         // set trainer plans
