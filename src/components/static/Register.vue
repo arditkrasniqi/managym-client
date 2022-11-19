@@ -21,31 +21,30 @@
     </div>
 </template>
 <script>
-    import config from '../../config'
-    import axios from 'axios'
+import axios from 'axios'
 export default {
-    data(){
+    data() {
         return {
-            defaultAvatar:'https://pickaface.net/assets/images/slides/slide2.png',
-            firstname:'',
-            lastname:'',
-            email:'',
-            password:'',
+            defaultAvatar: 'https://pickaface.net/assets/images/slides/slide2.png',
+            firstname: '',
+            lastname: '',
+            email: '',
+            password: '',
         }
     },
-    methods:{
-        register(){
+    methods: {
+        register() {
             let vm = this;
-            axios.post(config.api_hostname + '/register',
+            axios.post(process.env.api_hostname + '/register',
                 {
-                    firstname:vm.firstname,
-                    lastname:vm.lastname,
-                    email:vm.email,
-                    password:vm.password,
-                    avatar:vm.defaultAvatar,
-                    domain: config.domain
+                    firstname: vm.firstname,
+                    lastname: vm.lastname,
+                    email: vm.email,
+                    password: vm.password,
+                    avatar: vm.defaultAvatar,
+                    domain: process.env.domain
                 }).then(response => {
-                   this.$router.push('login');
+                    this.$router.push('login');
                 });
         }
     }

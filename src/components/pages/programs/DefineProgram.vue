@@ -48,7 +48,6 @@
 </template>
 <script>
     import {mapState} from "vuex";
-    import config from "../../../config";
     import axios from "axios";
 
     export default {
@@ -92,7 +91,7 @@
                     if(result){
                         let vm = this;
                         this.defineProgramSpinner = true;
-                        axios.post(config.api_hostname + '/newProgram',
+                        axios.post(process.env.api_hostname + '/newProgram',
                             {
                                 trainerId:vm.userStore.info.userId,
                                 title:vm.program.title,

@@ -73,7 +73,6 @@
 </template>
 <script>
     import axios from 'axios'
-    import config from '../../config.js'
     import {mapState} from 'vuex'
     import Datepicker from 'vuejs-datepicker'
     export default {
@@ -109,7 +108,7 @@
                 this.$validator.validateAll().then((result) => {
                     if(result){
                         this.buttonSpin = true;
-                        axios.post(config.api_hostname + '/appointmentRequest',
+                        axios.post(process.env.api_hostname + '/appointmentRequest',
                             {
                                 userCustomerId:this.userStore.info.id,
                                 userTrainerId:vm.trainerId,
@@ -139,7 +138,7 @@
             },
             getTrainer(){
                 var vm = this
-                axios.post(config.api_hostname+'/getTrainerById',{id:this.trainerId})
+                axios.post(process.env.api_hostname+'/getTrainerById',{id:this.trainerId})
                     .then(response => {
                         vm.trainer.details = response.data.trainer[0];
                         vm.trainer.rewards = response.data.rewards;

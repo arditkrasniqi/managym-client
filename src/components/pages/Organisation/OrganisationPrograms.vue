@@ -146,7 +146,6 @@
 </template>
 
 <script>
-    import config from '../../../config'
     import axios from 'axios'
     import {mapState} from 'vuex'
 
@@ -234,7 +233,7 @@
                 this.editSpinner = true;
                 let vm = this;
                 let program = this.programToEdit;
-                axios.put(config.api_hostname + '/editProgram',
+                axios.put(process.env.api_hostname + '/editProgram',
                     {
                         programId: program.id,
                         title: program.title,
@@ -250,7 +249,7 @@
             },
             getPrograms() {
                 let vm = this;
-                axios.get(`${config.api_hostname}/getOrganisationPrograms/${vm.org.id}`)
+                axios.get(`${process.env.api_hostname}/getOrganisationPrograms/${vm.org.id}`)
                     .then(response => {
                         vm.org.programs = response.data.programs;
                         vm.programTrainers = response.data.programTrainers;
@@ -286,7 +285,7 @@
                 }).then(
                     result => {
                         this.removeSpinner = true;
-                        axios.delete(config.api_hostname + '/removeProgram',
+                        axios.delete(process.env.api_hostname + '/removeProgram',
                             {
                                 data: {
                                     programId: p.id,

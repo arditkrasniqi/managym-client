@@ -78,7 +78,6 @@
 </template>
 
 <script>
-    import config from '../../../config'
     import axios from 'axios'
     import {mapState} from 'vuex'
 
@@ -157,7 +156,7 @@
                 e.preventDefault();
             },
             getOrganisationTrainers() {
-                axios.get(`${config.api_hostname}/getOrganisationTrainers/${this.org.id}`)
+                axios.get(`${process.env.api_hostname}/getOrganisationTrainers/${this.org.id}`)
                     .then(response => {
                         this.trainers = response.data.trainers;
                     });
@@ -167,7 +166,7 @@
                     if (result) {
                         let vm = this;
                         this.defineProgramSpinner = true;
-                        axios.post(config.api_hostname + '/newProgramMultipleTrainers',
+                        axios.post(process.env.api_hostname + '/newProgramMultipleTrainers',
                             {
                                 trainers: vm.assigned,
                                 title: vm.program.title,

@@ -51,7 +51,6 @@
 
 <script>
     import axios from 'axios'
-    import config from '../../../config'
     import {mapState} from 'vuex'
 
     export default {
@@ -87,7 +86,7 @@
         methods: {
             getBank() {
                 let vm = this;
-                axios.get(config.api_hostname + '/getBank/' + vm.userStore.info.id)
+                axios.get(process.env.api_hostname + '/getBank/' + vm.userStore.info.id)
                     .then(response => {
                         if (response.data.trainer != null) {
                             vm.bank = response.data.trainer.bank
@@ -101,7 +100,7 @@
                 this.$validator.validateAll().then(result => {
                     if (result) {
                         this.buttonSpinner = true;
-                        axios.post(config.api_hostname + '/trainerPayout',
+                        axios.post(process.env.api_hostname + '/trainerPayout',
                             {
                                 trainerId: vm.userStore.info.id,
                                 price: vm.accountBalance,
@@ -123,7 +122,7 @@
             },
             getAccountBalance() {
                 let vm = this;
-                axios.get(config.api_hostname + '/getAccountBalance/' + vm.userStore.info.id)
+                axios.get(process.env.api_hostname + '/getAccountBalance/' + vm.userStore.info.id)
                     .then(response => {
                         vm.accountBalance = response.data.total;
                         vm.canRequestNextPayout = response.data.canRequestNextPayout;

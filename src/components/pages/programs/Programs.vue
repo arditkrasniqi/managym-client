@@ -113,7 +113,6 @@
 </template>
 <script>
     import {mapState} from "vuex";
-    import config from "../../../config";
     import axios from "axios";
 
     export default {
@@ -148,7 +147,7 @@
             },
             getTrainerPrograms() {
                 let vm = this;
-                axios.get(config.api_hostname + '/trainerPrograms')
+                axios.get(process.env.api_hostname + '/trainerPrograms')
                     .then(response => {
                         console.log(response);
                         vm.trainerPrograms = response.data.data;
@@ -167,7 +166,7 @@
                 }).then(
                     result => {
                         this.removeSpinner = true;
-                        axios.delete(config.api_hostname + '/removeProgram',
+                        axios.delete(process.env.api_hostname + '/removeProgram',
                             {
                                 data:{
                                     programId:p.id
@@ -194,7 +193,7 @@
                 this.editSpinner = true;
                 let vm = this;
                 let program = this.programToEdit;
-                axios.put(config.api_hostname + '/editProgram',
+                axios.put(process.env.api_hostname + '/editProgram',
                     {
                         programId:program.id,
                         title:program.title,

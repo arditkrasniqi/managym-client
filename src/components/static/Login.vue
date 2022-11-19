@@ -22,7 +22,6 @@
 </template>
 <script>
     import axios from 'axios'
-    import config from '../../config.js'
 
 
     export default{
@@ -42,9 +41,9 @@
                 this.$validator.validateAll()
                     .then(result => {
                         if(result){
-                            config.api_data.username = this.username;
-                            config.api_data.password= this.password;
-                            axios.post(config.hostname + '/oauth/token',config.api_data)
+                            process.env.api_data.username = this.username;
+                            process.env.api_data.password= this.password;
+                            axios.post(process.env.hostname + '/oauth/token',process.env.api_data)
                                 .then(response => {
                                     vm.data = response;
                                     this.$auth.setToken(response.data.token_type + ' ' +response.data.access_token,response.data.expires_in + Date.now());

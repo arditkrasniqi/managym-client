@@ -93,7 +93,6 @@
 <script>
     import {mapState} from "vuex";
     import axios from "axios";
-    import config from "../../../config";
     import Certificates from "./Certificates.vue";
     import UpdateInfo from "./UpdateInfo.vue";
     import ChangePassword from "./PasswordChange.vue";
@@ -104,7 +103,7 @@
         data() {
             return {
                 activeModule: "accountSettings",
-                hostname: config.hostname + "/storage/",
+                hostname: process.env.hostname + "/storage/",
                 showModalFooter: false,
                 uploads: {
                     showSpinner: false,
@@ -163,14 +162,14 @@
 
                 axios
                     .post(
-                        config.api_hostname + "/updateProfilePicture",
+                        process.env.api_hostname + "/updateProfilePicture",
                         this.uploads.form,
                         configuration
                     )
                     .then(response => {
                         vm.uploads.showSpinner = false;
                         axios
-                            .post(config.api_hostname + "/savePictureToDB", {
+                            .post(process.env.api_hostname + "/savePictureToDB", {
                                 userId: userId,
                                 folder: response.data.folder,
                                 picture: response.data.picture

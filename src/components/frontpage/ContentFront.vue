@@ -78,150 +78,163 @@
 </template>
 
 <script>
-    import {mapState} from "vuex";
-    import config from "../../config";
+import { mapState } from "vuex";
 
-    export default {
-        name: "content-4trainer",
-        data() {
-            return {
-                storage: config.hostname + "/storage/"
-            };
-        },
-        computed: {
-            ...mapState({
-                trainerList: state => state.frontPage.trainerSearch.trainerList
-            })
-        },
-        methods: {
-            setTrainerVisitId(id) {
-                this.$store.commit("setTrainerVisitId", id);
-                $("#loginModal").modal("show");
-            }
+export default {
+    name: "content-4trainer",
+    data() {
+        return {
+            storage: process.env.domain + "/storage/"
+        };
+    },
+    computed: {
+        ...mapState({
+            trainerList: state => state.frontPage.trainerSearch.trainerList
+        })
+    },
+    methods: {
+        setTrainerVisitId(id) {
+            this.$store.commit("setTrainerVisitId", id);
+            $("#loginModal").modal("show");
         }
-    };
+    }
+};
 </script>
 
 <style lang="scss">
-    .input-field {
-        background: none;
-        outline: none;
-        border: none;
-        border-radius: 0;
-        border-bottom: 2px solid #3da0d8;
-    }
+.input-field {
+    background: none;
+    outline: none;
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid #3da0d8;
+}
 
-    .button {
-        cursor: pointer;
-        border-radius: 0;
-        background: #3da0d8;
-        color: white;
-        padding: 5px 15px;
-    }
+.button {
+    cursor: pointer;
+    border-radius: 0;
+    background: #3da0d8;
+    color: white;
+    padding: 5px 15px;
+}
 
-    .content-title {
-        @extend .button;
-    }
+.content-title {
+    @extend .button;
+}
 
-    .trainers {
-        margin: 40px auto;
-        border-bottom: 1px solid #3da0d8;
-        .trainer-avatar {
+.trainers {
+    margin: 40px auto;
+    border-bottom: 1px solid #3da0d8;
+
+    .trainer-avatar {
+        width: 100%;
+        height: 100%;
+
+        img {
             width: 100%;
             height: 100%;
-            img {
-                width: 100%;
-                height: 100%;
-            }
-        }
-        .trainer {
-            cursor: pointer;
-            position: relative;
-            height: 300px;
-            margin-top: 60px;
-            margin-bottom: 60px;
-            transition: transform 0.3s;
-            &:hover {
-                box-shadow: 0 22px 35px rgba(0, 0, 0, 0.5);
-                transform: scale(1.04);
-            }
-            .trainer-info {
-                overflow: hidden;
-                color: white;
-                width: 100%;
-                background: rgba(61, 160, 216, 0.78);
-                min-height: 80px;
-                height: 80px;
-                max-height: 80px;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                h4 {
-                    font-size: 20px;
-                    border-bottom: 1px dotted white;
-                    padding-bottom: 7px;
-                }
-                p {
-                    font-size: 14px;
-                }
-            }
         }
     }
 
-    .what-we-de {
-        margin-top: 40px;
-        max-width: 690px !important;
-        .content-title {
-            margin-bottom: 40px;
+    .trainer {
+        cursor: pointer;
+        position: relative;
+        height: 300px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+        transition: transform 0.3s;
+
+        &:hover {
+            box-shadow: 0 22px 35px rgba(0, 0, 0, 0.5);
+            transform: scale(1.04);
         }
-        .item-round {
-            margin-top: 40px;
-            .item-logo {
-                /*width: 100%;*/
-                padding: 50px;
-                border-radius: 100%;
-                border: 2px solid #3da0d8;
-                background: #3da0d8;
-                color: white;
-                transition: background 0.3s, color 0.3s;
-                &:hover {
-                    cursor: pointer;
-                    background: white;
-                    i {
-                        color: #3da0d8;
-                    }
-                }
-                i {
-                    font-size: 100px;
-                }
+
+        .trainer-info {
+            overflow: hidden;
+            color: white;
+            width: 100%;
+            background: rgba(61, 160, 216, 0.78);
+            min-height: 80px;
+            height: 80px;
+            max-height: 80px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+
+            h4 {
+                font-size: 20px;
+                border-bottom: 1px dotted white;
+                padding-bottom: 7px;
             }
-            .item-text {
-                p {
-                    margin-top: 20px;
-                    font-size: 15px;
+
+            p {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+.what-we-de {
+    margin-top: 40px;
+    max-width: 690px !important;
+
+    .content-title {
+        margin-bottom: 40px;
+    }
+
+    .item-round {
+        margin-top: 40px;
+
+        .item-logo {
+            /*width: 100%;*/
+            padding: 50px;
+            border-radius: 100%;
+            border: 2px solid #3da0d8;
+            background: #3da0d8;
+            color: white;
+            transition: background 0.3s, color 0.3s;
+
+            &:hover {
+                cursor: pointer;
+                background: white;
+
+                i {
                     color: #3da0d8;
                 }
             }
+
+            i {
+                font-size: 100px;
+            }
+        }
+
+        .item-text {
+            p {
+                margin-top: 20px;
+                font-size: 15px;
+                color: #3da0d8;
+            }
         }
     }
+}
 
-    .footer {
-        margin-top: 80px;
-        padding: 38px 10px;
-        background-image: url("../../assets/img/footer.png");
-        background-size: 100% 110%;
-        background-position-y: -10px;
-        color: white;
-    }
+.footer {
+    margin-top: 80px;
+    padding: 38px 10px;
+    background-image: url("../../assets/img/footer.png");
+    background-size: 100% 110%;
+    background-position-y: -10px;
+    color: white;
+}
 
-    .powered {
-        padding: 10px;
-    }
+.powered {
+    padding: 10px;
+}
 
-    @media screen and (max-width: 767px) {
-        .item-logo {
-            width: 200px;
-            margin: 0 auto;
-        }
+@media screen and (max-width: 767px) {
+    .item-logo {
+        width: 200px;
+        margin: 0 auto;
     }
+}
 </style>

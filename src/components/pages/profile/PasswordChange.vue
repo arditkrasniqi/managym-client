@@ -34,7 +34,6 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import config from "../../../config";
 import axios from "axios";
 
 export default {
@@ -67,7 +66,7 @@ export default {
                   ? this.userStore.info.userId
                   : this.userStore.info.id;
               axios
-                  .put(config.api_hostname + "/changeUserPassword", {
+                  .put(process.env.api_hostname + "/changeUserPassword", {
                       userId: userId,
                       oldPass: vm.oldPass,
                       newPass: vm.newPass,

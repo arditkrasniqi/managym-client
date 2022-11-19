@@ -314,14 +314,13 @@
 
 <script>
     import {mapState} from "vuex";
-    import config from "../../../config";
     import axios from "axios";23
 
     export default {
         name: "profile",
         data() {
             return {
-                storage: config.hostname + "/storage/",
+                storage: process.env.hostname + "/storage/",
                 buttonSpin: false,
                 location: "",
                 latitude: "",
@@ -349,12 +348,12 @@
             };
         },
         mounted() {
-            config.googleSearch();
+            process.env.googleSearch();
         },
         created() {
         },
         beforeCreate() {
-            axios.get(config.api_hostname + "/getTrainerPlans").then(response => {
+            axios.get(process.env.api_hostname + "/getTrainerPlans").then(response => {
                 this.$store.dispatch("setTrainerPlans", response.data.data);
             });
         },
@@ -370,7 +369,7 @@
                     if(result){
                         let vm = this;
                         this.plan.payButtonSpin = true;
-                        Stripe.setPublishableKey(config.stripe.publicKey);
+                        Stripe.setPublishableKey(process.env.stripe.publicKey);
                         Stripe.card.createToken(
                             {
                                 number: this.plan.number,
@@ -399,7 +398,7 @@
             createCharge(token, period) {
                 let vm = this;
                 axios
-                    .post(config.api_hostname + "/payTrainerPlanPayment", {
+                    .post(process.env.api_hostname + "/payTrainerPlanPayment", {
                         token: token,
                         period: period,
                         planId: vm.plan.planId,
@@ -446,7 +445,7 @@
                     "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                     this.city +
                     "&key=" +
-                    config.google_api_key,
+                    process.env.google_api_key,
                     function (response) {
                         let pos = response.results[0].geometry.location;
                         vm.latitude = pos.lat;
@@ -459,7 +458,7 @@
                 let vm = this;
                 vm.buttonSpin = true;
                 axios
-                    .post(config.api_hostname + "/becomeTrainer", {
+                    .post(process.env.api_hostname + "/becomeTrainer", {
                         userId: vm.userStore.info.id,
                         location: vm.location,
                         lat: lat,
@@ -473,7 +472,7 @@
                     })
                     .then(response => {
                         vm.buttonSpin = false;
-                        axios.get(config.api_hostname + "/user").then(response => {
+                        axios.get(process.env.api_hostname + "/user").then(response => {
                             this.$store.dispatch("setAuth", true);
                             this.$store.dispatch("setAuthUser", response.data.user);
                             this.$store.dispatch(

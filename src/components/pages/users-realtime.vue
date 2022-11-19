@@ -31,7 +31,6 @@
 <script>
     import {mapState} from 'vuex'
     import axios from 'axios'
-    import config from '../../config'
     import pusher from 'pusher-js'
 
     export default {
@@ -52,8 +51,8 @@
         created(){
             this.getUsers();
             let vm = this;
-            this.pusher = new Pusher(config.pusher.appKey, {
-                cluster:config.pusher.appCluster
+            this.pusher = new Pusher(process.env.pusher.appKey, {
+                cluster:process.env.pusher.appCluster
             });
             this.channel = this.pusher.subscribe('my-channel');
             this.channel.bind('my-event', function(data) {
@@ -64,7 +63,7 @@
         methods:{
             getUsers(){
                 let vm = this;
-                axios.get(config.api_hostname + '/usersList')
+                axios.get(process.env.api_hostname + '/usersList')
                     .then(response => {
                         vm.users = response.data;
                     })
@@ -84,7 +83,7 @@
                     this.fileUpload.form.append('pics[]', file)
                 });
                 let cnf = { headers: {'Content-type': 'multipart/form-data'} };
-                axios.post(config.api_hostname + '/uploadFile',this.fileUpload.form,cnf)
+                axios.post(process.env.api_hostname + '/uploadFile',this.fileUpload.form,cnf)
                     .then(response => {
                     });
             }

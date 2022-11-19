@@ -45,13 +45,12 @@
 
 <script>
     import axios from 'axios';
-    import config from '../../../config';
 
     export default {
         name: "invoices",
         data(){
             return {
-                storage:config.hostname + '/storage/',
+                storage:process.env.hostname + '/storage/',
                 invoices:''
             }
         },
@@ -67,7 +66,7 @@
         methods:{
             getInvoices(){
                 let vm = this;
-                axios.get(config.api_hostname + '/invoices')
+                axios.get(process.env.api_hostname + '/invoices')
                     .then(response => {
                         vm.invoices = response.data.files;
                     });

@@ -45,7 +45,6 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import config from "config";
 
 export default {
   data() {

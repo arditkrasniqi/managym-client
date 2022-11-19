@@ -40,7 +40,7 @@
             <div class="search-form ml-auto mr-auto">
                 <div class="row">
                     <div class="col-12 col-sm-8">
-                        <input @keypress="trainerSearchOnChange" list="locationsList" type="search"
+                        <input @keypress="citySearchOnChange" list="locationsList" type="search"
                             v-model="trainerSearch.city" class="form-control" :placeholder="$t('City to search in')">
                         <datalist id="locationsList">
                             <option :key="location.name" v-for="location in locationsList">{{ location.name }}</option>
@@ -179,7 +179,6 @@
 
 <script>
 import axios from "axios";
-import config from "../../config";
 import { mapState } from "vuex";
 import URL from "../../assets/js/URL-Parser/js/URLParser";
 import register from './Register.vue'
@@ -264,7 +263,7 @@ export default {
         toggleLogin() {
             this.showLogin = !this.showLogin;
         },
-        trainerSearchOnChange: debounce(async function (e) {
+        citySearchOnChange: debounce(async function (e) {
             const client = new AutoComplete(this.trainerSearch.city)
             await client.init();
             this.locationsList = client.getLocations()
@@ -272,7 +271,7 @@ export default {
         searchTrainer: async function () {
             if (this.trainerSearch.city !== "") {
                 if (!this.locationsList || !this.locationsList.find(item => item.name == this.trainerSearch.city)) {
-                    alert('Please a location from dropdown')
+                    alert(this.$t('Please a location from dropdown'))
                     return;
                 }
 
@@ -282,7 +281,7 @@ export default {
                 await client.init();
                 const coords = client.getCoords();
 
-                axios.post(config.api_hostname + '/search-guest', { latitude: coords.lat, longitude: coords.lon })
+                axios.post(process.env.api_hostname + '/search-guest', { latitude: coords.lat, longitude: coords.lon })
                     .then(response => {
                         this.$store.dispatch("setTrainers", response.data.data);
                     });
@@ -293,10 +292,13 @@ export default {
             this.$validator.validateAll().then(result => {
                 if (result) {
                     this.loginSpinner = true;
-                    config.api_data.username = vm.auth.username;
-                    config.api_data.password = vm.auth.password;
+                    const apiData = {
+                        ...process.env.api_data,
+                        username: vm.auth.username,
+                        password: vm.auth.password
+                    }
                     axios
-                        .post(config.hostname + "/oauth/token", config.api_data)
+                        .post(process.env.hostname + "/oauth/token", apiData)
                         .then(response => {
                             $("#loginModal").modal("hide");
                             $("#registerModal").modal("hide");
@@ -330,10 +332,10 @@ export default {
         recoverPassword() {
             let vm = this;
             this.recoverySpinner = true;
-            axios.post(config.api_hostname + '/recoverPassword',
+            axios.post(process.env.api_hostname + '/recoverPassword',
                 {
                     email: vm.recoveryEmail,
-                    domain: config.domain
+                    domain: process.env.domain
                 }).then(response => {
                     if (response.data.error == 'unvalidEmail') {
                         vm.e.error = vm.e.errors.unvalidEmail;
@@ -364,7 +366,7 @@ export default {
                 return;
             }
 
-            axios.post(config.api_hostname + '/resetPassword',
+            axios.post(process.env.api_hostname + '/resetPassword',
                 {
                     password: vm.reset.confirmNewPass,
                     token: vm.reset.token

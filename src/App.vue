@@ -2,91 +2,85 @@
     <div id="app">
         <navbar></navbar>
         <sidebar></sidebar>
-        <notifications group="foo"/>
+        <notifications group="foo" />
     </div>
 </template>
 <script>
-    import axios from "axios";
-    import Navbar from "./components/static/Navbar.vue";
-    import Sidebar from "./components/static/Sidebar.vue";
-    import config from "./config.js";
-    import URL from './assets/js/URL-Parser/js/URLParser'
-    import {mapState} from 'vuex'
+import axios from "axios";
+import Navbar from "./components/static/Navbar.vue";
+import Sidebar from "./components/static/Sidebar.vue";
+import URL from './assets/js/URL-Parser/js/URLParser'
+import { mapState } from 'vuex'
 
-    export default {
-        components: {
-            navbar: Navbar,
-            sidebar: Sidebar
-        },
-        beforeCreate() {
-            if (localStorage.getItem("expiration") !== null) {
-                let exp = new Date(localStorage.getItem("expiration"));
-                let today = new Date();
-                if (exp < today) {
-                    this.$store.commit("logout");
-                    this.$router.push("/");
+export default {
+    components: {
+        navbar: Navbar,
+        sidebar: Sidebar
+    },
+    beforeCreate() {
+        if (localStorage.getItem("expiration") !== null) {
+            let exp = new Date(localStorage.getItem("expiration"));
+            let today = new Date();
+            if (exp < today) {
+                this.$store.commit("logout");
+                this.$router.push("/");
+            }
+        }
+    },
+    computed: {
+        ...mapState({
+            userStore: state => state.user
+        })
+    },
+    created() {
+        let vm = this;
+        if (localStorage.getItem("token") !== null) {
+            axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+                "token"
+            );
+            axios.get(process.env.api_hostname + "/user").then(response => {
+                this.$store.dispatch("setAuth", true);
+                this.$store.dispatch("setAuthTrainerPlan", response.data.trainerPlan);
+                this.$store.dispatch("setUserRole", response.data.role[0].description);
+                if (response.data.role[0].description == "trainer" && Array.isArray(response.data.user)) {
+                    this.$store.dispatch("setAuthUser", Array.isArray(response.data.user) ? response.data.user[0] : response.data.user);
+                } else {
+                    this.$store.dispatch("setAuthUser", response.data.user);
                 }
-            }
-        },
-        computed: {
-            ...mapState({
-                userStore: state => state.user
-            })
-        },
-        created() {
-            let vm = this;
-            let port =
-                document.location.port == "" ? "" : ":" + document.location.port + "/";
-            let hostname = "http://" + document.location.hostname + port;
-            if (localStorage.getItem("token") !== null) {
-                axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-                    "token"
-                );
-                axios.get(config.api_hostname + "/user").then(response => {
-                    this.$store.dispatch("setAuth", true);
-                    this.$store.dispatch("setAuthTrainerPlan", response.data.trainerPlan);
-                    this.$store.dispatch("setUserRole", response.data.role[0].description);
-                    if (response.data.role[0].description == "trainer") {
-                        this.$store.dispatch("setAuthUser", response.data.user[0]);
-                    } else {
-                        this.$store.dispatch("setAuthUser", response.data.user);
-                    }
-                    if (response.data.hasOwnProperty("affiliateLink")) {
-                        this.$store.dispatch(
-                            "setAffiliateLink",
-                            hostname +
-                            "?affiliateLink=" +
-                            response.data.affiliateLink[0].affiliateLink
-                        );
-                    }
-                });
-            }
-            this.confirmEmail();
-            this.affiliate();
-        },
-        data() {
-            return {
-                user: null,
-                role: null,
-            };
-        },
-        mounted() {
-            $(".timepicker").each(function () {
-                $(this).timepicker({
-                    maxHours: 24,
-                    showMeridian: false,
-                });
+                if (response.data.hasOwnProperty("affiliateLink")) {
+                    this.$store.dispatch(
+                        "setAffiliateLink",
+                        `${process.env.domain}/?affiliateLink=${response.data.affiliateLink[0].affiliateLink}`
+                    );
+                }
             });
-        },
-        methods: {
-            confirmEmail() {
-                let vm = this;
-                if (URL.get('confirmEmail')) {
-                    let token = URL.get('confirmEmail');
-                    axios.post(config.api_hostname + '/confirmEmail',
-                        {
-                            token: token
-                        }).then(response => {
+        }
+        this.confirmEmail();
+        this.affiliate();
+    },
+    data() {
+        return {
+            user: null,
+            role: null,
+        };
+    },
+    mounted() {
+        $(".timepicker").each(function () {
+            $(this).timepicker({
+                maxHours: 24,
+                showMeridian: false,
+            });
+        });
+    },
+    methods: {
+        confirmEmail() {
+            let vm = this;
+            if (URL.get('confirmEmail')) {
+                let token = URL.get('confirmEmail');
+                axios.post(process.env.api_hostname + '/confirmEmail',
+                    {
+                        token: token
+                    }).then(response => {
                         this.$store.commit('setActiveUserEmail', true);
                         if (response.data.statusCode == 200) {
                             this.$swal({
@@ -120,216 +114,235 @@
                         }
                     });
 
-                }
-            },
-            affiliate() {
-                /*
-                          check if an affiliates exists
-                          and verify its expiration
-                          if its expired destroy the affiliate
-
-                      */
-                if (localStorage.getItem("affiliate") != null) {
-                    let today = new Date();
-                    let affiliate = JSON.parse(localStorage.getItem("affiliate"));
-                    let expiration = new Date(affiliate.expiration);
-                    if (today > expiration) {
-                        localStorage.removeItem("affiliate");
-                    }
-                }
             }
         },
-        name: "app"
-    };
+        affiliate() {
+            /*
+                      check if an affiliates exists
+                      and verify its expiration
+                      if its expired destroy the affiliate
+
+                  */
+            if (localStorage.getItem("affiliate") != null) {
+                let today = new Date();
+                let affiliate = JSON.parse(localStorage.getItem("affiliate"));
+                let expiration = new Date(affiliate.expiration);
+                if (today > expiration) {
+                    localStorage.removeItem("affiliate");
+                }
+            }
+        }
+    },
+    name: "app"
+};
 </script>
 
 <style lang="scss">
-    @import "./styles/_variables.scss";
-    // @import "~fullcalendar/dist/fullcalendar.css";
+@import "./styles/_variables.scss";
+@import "../node_modules/fullcalendar/dist/fullcalendar.css";
 
-    .form-control:disabled, .form-control[readonly] {
-        background-color: white !important;
-    }
-    .modal-header {
-        .close {
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-    }
-    .w50 {
-        width: 50px;
-    }
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: white !important;
+}
 
-    .no-triangle.dropdown-toggle::after {
-        border-top: none !important;
+.modal-header {
+    .close {
+        padding: 0 !important;
+        margin: 0 !important;
     }
+}
 
-    .dropdown {
-        display: none;
-        list-style-type: bullet;
-        li {
+.w50 {
+    width: 50px;
+}
+
+.no-triangle.dropdown-toggle::after {
+    border-top: none !important;
+}
+
+.dropdown {
+    display: none;
+    list-style-type: bullet;
+
+    li {
+        color: white !important;
+
+        a {
+            background: none !important;
+            font-size: 13px !important;
             color: white !important;
-            a {
-                background: none !important;
-                font-size: 13px !important;
-                color: white !important;
-                padding: 7px 0;
-                &:active,
-                &:hover {
-                    background: #1e93e0 !important;
-                }
+            padding: 7px 0;
+
+            &:active,
+            &:hover {
+                background: #1e93e0 !important;
             }
         }
     }
+}
 
-    .router-link-active .dropdown {
-        display: block;
-    }
+.router-link-active .dropdown {
+    display: block;
+}
 
-    .nav-link.active,
-    .active {
-        background: $primary-color !important;
-        color: white !important;
-        & i {
-            color: white !important;
-        }
-    }
+.nav-link.active,
+.active {
+    background: $primary-color !important;
+    color: white !important;
 
-    .primary-bg {
-        background: $primary-color;
+    & i {
         color: white !important;
     }
+}
 
-    .primary-color {
-        color: $primary-color;
-    }
+.primary-bg {
+    background: $primary-color;
+    color: white !important;
+}
 
-    body {
-        background-color: #fafbfc !important;
-        form {
-            .text-danger {
-                font-size: 14px;
-            }
-        }
-    }
+.primary-color {
+    color: $primary-color;
+}
 
-    * {
-        font-family: "Open Sans", sans-serif;
-    }
+body {
+    background-color: #fafbfc !important;
 
-    @media screen and (max-width: 770px) {
-        main, main.first-main {
-            margin-left: 0 !important;
-        }
-        .sidebar {
-            display: none !important;
-        }
-        .navbar-brand a {
-            display: inline !important;
+    form {
+        .text-danger {
+            font-size: 14px;
         }
     }
+}
 
-    .error {
-        color: #ccc;
-        text-align: center;
-        .error-header {
-            font-size: 200px;
-            color: #cccc;
-            font-weight: bold;
-        }
-        .error-para {
-            color: #5f5f5f;
-        }
+* {
+    font-family: "Open Sans", sans-serif;
+}
+
+@media screen and (max-width: 770px) {
+
+    main,
+    main.first-main {
+        margin-left: 0 !important;
     }
 
-    // datetimepicker settings
-    .datetime-picker {
-        input {
-            display: block !important;
-            width: 100% !important;
-            padding: 1.115rem 0.75rem !important;
-            font-size: 1rem !important;
-            line-height: 1.25 !important;
-            color: #495057 !important;
-            background-color: #fff !important;
-            background-image: none !important;
-            background-clip: padding-box !important;
-            border: 1px solid rgba(0, 0, 0, 0.15) !important;
-            border-radius: 0.25rem !important;
-            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s !important;
-        }
+    .sidebar {
+        display: none !important;
     }
 
-    .calender-div {
-        background: #efefef;
-        z-index: 9;
-        > div {
-            background: white !important;
-        }
-        .time-picker {
-            background: #efefef !important;
-        }
-        .port {
-            height: 25px !important;
-        }
-        .days {
-            width: 30px !important;
-        }
+    .navbar-brand a {
+        display: inline !important;
+    }
+}
+
+.error {
+    color: #ccc;
+    text-align: center;
+
+    .error-header {
+        font-size: 200px;
+        color: #cccc;
+        font-weight: bold;
     }
 
-    //
-    .bootstrap-timepicker-meridian,
-    .bootstrap-timepicker-minute,
-    .bootstrap-timepicker-hour {
-        border: none;
-        outline: none;
+    .error-para {
+        color: #5f5f5f;
     }
+}
 
-    .glyphicon-chevron-up {
-        &:before {
-            content: "^";
-            /*color:transparent !important;*/
-        }
-    }
-
-    .glyphicon-chevron-down {
-        &:before {
-            content: "^";
-            display: inline-block;
-            -webkit-transform: rotate(180deg);
-            -moz-transform: rotate(180deg);
-            -o-transform: rotate(180deg);
-            -ms-transform: rotate(180deg);
-            transform: rotate(180deg);
-        }
-    }
-
-    .vdp-datepicker__calendar {
-        header {
-            margin-top: 0;
-        }
-    }
-
-    .table-responsive {
+// datetimepicker settings
+.datetime-picker {
+    input {
+        display: block !important;
         width: 100% !important;
-        overflow-x: auto !important;
+        padding: 1.115rem 0.75rem !important;
+        font-size: 1rem !important;
+        line-height: 1.25 !important;
+        color: #495057 !important;
+        background-color: #fff !important;
+        background-image: none !important;
+        background-clip: padding-box !important;
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+        border-radius: 0.25rem !important;
+        transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s !important;
+    }
+}
+
+.calender-div {
+    background: #efefef;
+    z-index: 9;
+
+    >div {
+        background: white !important;
     }
 
-    .pointer {
-        cursor: pointer;
+    .time-picker {
+        background: #efefef !important;
     }
 
-    .m5 {
-        margin-top: 5px;
-        margin-bottom: 5px;
+    .port {
+        height: 25px !important;
     }
 
-    .m10 {
-        margin-top: 10px;
-        margin-bottom: 10px;
+    .days {
+        width: 30px !important;
     }
+}
 
-    button, a.btn {
-        cursor: pointer !important;
+//
+.bootstrap-timepicker-meridian,
+.bootstrap-timepicker-minute,
+.bootstrap-timepicker-hour {
+    border: none;
+    outline: none;
+}
+
+.glyphicon-chevron-up {
+    &:before {
+        content: "^";
+        /*color:transparent !important;*/
     }
+}
+
+.glyphicon-chevron-down {
+    &:before {
+        content: "^";
+        display: inline-block;
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+}
+
+.vdp-datepicker__calendar {
+    header {
+        margin-top: 0;
+    }
+}
+
+.table-responsive {
+    width: 100% !important;
+    overflow-x: auto !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.m5 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.m10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+button,
+a.btn {
+    cursor: pointer !important;
+}
 </style>

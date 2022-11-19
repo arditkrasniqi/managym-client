@@ -1,4 +1,3 @@
-import config from '../config'
 import axios from 'axios'
 import { initial } from 'lodash';
 
@@ -14,7 +13,7 @@ class MapsClient {
     }
 
     async init(location){
-        this.api = `https://dev.virtualearth.net/REST/v1/Locations?key=${config.bing_api_key}&q=${location}`
+        this.api = `https://dev.virtualearth.net/REST/v1/Locations?key=${process.env.bing_api_key}&q=${location}`
         this.location = null;
         this.error = false;
 

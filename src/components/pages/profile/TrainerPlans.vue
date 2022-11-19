@@ -7,170 +7,173 @@
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
-                            <tr>
-                                <th></th>
-                                <th class="text-center">{{$t('Demo Trainer')}}</th>
-                                <th class="text-center">{{$t('Home Trainer')}}</th>
-                                <th class="text-center">{{$t('Expert')}}</th>
-                                <th class="text-center">{{$t('Enterprise')}}</th>
-                            </tr>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-center">{{$t('Demo Trainer')}}</th>
+                                    <th class="text-center">{{$t('Home Trainer')}}</th>
+                                    <th class="text-center">{{$t('Expert')}}</th>
+                                    <th class="text-center">{{$t('Enterprise')}}</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>
-                                    {{$t('Listed in search results')}}
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    {{$t('Access to calendar')}}
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    {{$t('Access to accounting')}}
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    {{$t('Ability to manage trainers')}}
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    {{$t('Ability to manage multiple locations')}}
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    {{$t('Analytics Tools')}}
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    -
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-check"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    {{$t('Provision for 4trainer')}}
-                                </td>
-                                <td class="text-center">
-                                    10%
-                                </td>
-                                <td class="text-center">
-                                    4%
-                                </td>
-                                <td class="text-center">
-                                    4%
-                                </td>
-                                <td class="text-center">
-                                    4%
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{$t('Monthy Cost')}}</td>
-                                <td class="text-center" v-for="p in trainerPlans">
-                                    <span v-if="p.monthlyPay == null">CHF 0</span>
-                                    <span v-else>CHF {{ p.monthlyPay }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{$t('Yearly Cost')}}</td>
-                                <td class="text-center" v-for="p in trainerPlans">
-                                    <span v-if="p.yearlyPay == null">CHF 0</span>
-                                    <span v-else>CHF {{ p.yearlyPay }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td class="text-center">
-                                    <span v-if="userStore.info.planId == 1">{{$t('Choose Plan')}}</span>
-                                    <button class="btn btn-sm primary-bg" @click="goToCard(1)" v-else>
-                                        <span v-if="plan.chooseSpinner" class="fa fa-spinner fa-spin"></span>
-                                        <span v-else>{{$t('Choose Plan')}}</span>
-                                    </button>
-                                </td>
-                                <td class="text-center">
-                                    <span v-if="userStore.info.planId == 2">{{$t('Choose Plan')}}</span>
-                                    <button class="btn btn-sm primary-bg" @click="goToCard(2)" v-else>{{$t('Choose Plan')}}</button>
-                                </td>
-                                <td class="text-center">
-                                    <span v-if="userStore.info.planId == 3">{{$t('Choose Plan')}}</span>
-                                    <button class="btn btn-sm primary-bg" @click="goToCard(3)" v-else>{{$t('Choose Plan')}}</button>
-                                </td>
-                                <td class="text-center">
-                                    <span v-if="userStore.info.planId == 4">{{$t('Choose Plan')}}</span>
-                                    <button class="btn btn-sm primary-bg" @click="goToCard(4)" v-else>{{$t('Choose Plan')}}</button>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        {{$t('Listed in search results')}}
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$t('Access to calendar')}}
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$t('Access to accounting')}}
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$t('Ability to manage trainers')}}
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$t('Ability to manage multiple locations')}}
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$t('Analytics Tools')}}
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-check"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{$t('Provision for 4trainer')}}
+                                    </td>
+                                    <td class="text-center">
+                                        10%
+                                    </td>
+                                    <td class="text-center">
+                                        4%
+                                    </td>
+                                    <td class="text-center">
+                                        4%
+                                    </td>
+                                    <td class="text-center">
+                                        4%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{$t('Monthy Cost')}}</td>
+                                    <td class="text-center" v-for="p in trainerPlans">
+                                        <span v-if="p.monthlyPay == null">CHF 0</span>
+                                        <span v-else>CHF {{ p.monthlyPay }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{$t('Yearly Cost')}}</td>
+                                    <td class="text-center" v-for="p in trainerPlans">
+                                        <span v-if="p.yearlyPay == null">CHF 0</span>
+                                        <span v-else>CHF {{ p.yearlyPay }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <span v-if="userStore.info.planId == 1">{{$t('Choose Plan')}}</span>
+                                        <button class="btn btn-sm primary-bg" @click="goToCard(1)" v-else>
+                                            <span v-if="plan.chooseSpinner" class="fa fa-spinner fa-spin"></span>
+                                            <span v-else>{{$t('Choose Plan')}}</span>
+                                        </button>
+                                    </td>
+                                    <td class="text-center">
+                                        <span v-if="userStore.info.planId == 2">{{$t('Choose Plan')}}</span>
+                                        <button class="btn btn-sm primary-bg" @click="goToCard(2)"
+                                            v-else>{{$t('Choose Plan')}}</button>
+                                    </td>
+                                    <td class="text-center">
+                                        <span v-if="userStore.info.planId == 3">{{$t('Choose Plan')}}</span>
+                                        <button class="btn btn-sm primary-bg" @click="goToCard(3)"
+                                            v-else>{{$t('Choose Plan')}}</button>
+                                    </td>
+                                    <td class="text-center">
+                                        <span v-if="userStore.info.planId == 4">{{$t('Choose Plan')}}</span>
+                                        <button class="btn btn-sm primary-bg" @click="goToCard(4)"
+                                            v-else>{{$t('Choose Plan')}}</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -184,23 +187,30 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label>{{$t('Credit Card Number')}}</label>
-                            <input v-validate="'required|credit_card'" type="number" name="credit_card" :data-vv-as="$t('Credit Card Number')" v-model="card.number" class="form-control">
-                            <span v-show="errors.has('credit_card')" class="text-danger">{{ errors.first('credit_card') }}</span>
+                            <input v-validate="'required|credit_card'" type="number" name="credit_card"
+                                :data-vv-as="$t('Credit Card Number')" v-model="card.number" class="form-control">
+                            <span v-show="errors.has('credit_card')"
+                                class="text-danger">{{ errors.first('credit_card') }}</span>
                         </div>
                         <div class="form-group">
                             <label>{{$t('CVC')}}</label>
-                            <input name="cvc" data-vv-as="CVC" v-validate="'required'" type="number" v-model="card.cvc" class="form-control">
+                            <input name="cvc" data-vv-as="CVC" v-validate="'required'" type="number" v-model="card.cvc"
+                                class="form-control">
                             <span v-show="errors.has('cvc')" class="text-danger">{{ errors.first('cvc') }}</span>
                         </div>
                         <div class="form-group">
                             <label>{{$t('Expiration Month')}}</label>
-                            <input v-validate="'required|min_value:1|max_value:12'" type="number" name="exp_month" v-model="card.expMonth" class="form-control">
-                            <span v-show="errors.has('exp_month')" class="text-danger">{{ errors.first('exp_month') }}</span>
+                            <input v-validate="'required|min_value:1|max_value:12'" type="number" name="exp_month"
+                                v-model="card.expMonth" class="form-control">
+                            <span v-show="errors.has('exp_month')"
+                                class="text-danger">{{ errors.first('exp_month') }}</span>
                         </div>
                         <div class="form-group">
                             <label>{{$t('Expiration Year')}}</label>
-                            <input v-validate="'required|min_value:2018'" name="exp_year" :data-vv-as="$t('Year')" type="number" v-model="card.expYear" class="form-control">
-                            <span v-show="errors.has('exp_year')" class="text-danger">{{ errors.first('exp_year') }}</span>
+                            <input v-validate="'required|min_value:2018'" name="exp_year" :data-vv-as="$t('Year')"
+                                type="number" v-model="card.expYear" class="form-control">
+                            <span v-show="errors.has('exp_year')"
+                                class="text-danger">{{ errors.first('exp_year') }}</span>
                         </div>
                         <div class="row">
                             <div class="col-6">
@@ -240,7 +250,6 @@
 <script>
     import axios from 'axios'
     import {mapState} from 'vuex'
-    import config from '../../../config'
 
     export default {
         name: "trainer-plans",
@@ -270,7 +279,7 @@
         },
         methods:{
             getPlans(){
-                axios.get(config.api_hostname + "/getTrainerPlans").then(response => {
+                axios.get(process.env.api_hostname + "/getTrainerPlans").then(response => {
                     this.$store.dispatch("setTrainerPlans", response.data.data);
                     this.plan.showPlans = true;
                 });
@@ -301,7 +310,7 @@
                     if(result){
                         let vm = this;
                         this.plan.payButtonSpin = true;
-                        Stripe.setPublishableKey(config.stripe.publicKey);
+                        Stripe.setPublishableKey(process.env.stripe.publicKey);
                         Stripe.card.createToken(
                             {
                                 number: this.card.number,
@@ -346,12 +355,12 @@
                         trainerId: vm.userStore.info.userId
                     };
                 axios
-                    .post(config.api_hostname + "/payTrainerPlanPayment", data)
+                    .post(process.env.api_hostname + "/payTrainerPlanPayment", data)
                     .then(response => {
                         if (response.data.statusCode == 200) {
                             vm.plan.payButtonSpin = false;
                             this.card.showCard = false;
-                            axios.get(config.api_hostname + "/user").then(response => {
+                            axios.get(process.env.api_hostname + "/user").then(response => {
                                 vm.getPlans();
                                 this.$store.dispatch("setAuth", true);
                                 this.$store.dispatch(
@@ -362,7 +371,7 @@
                                     "setUserRole",
                                     response.data.role[0].description
                                 );
-                                if (response.data.role[0].description == "trainer") {
+                                if (response.data.role[0].description == "trainer" && Array.isArray(response.data.user)) {
                                     this.$store.dispatch("setAuthUser", response.data.user[0]);
                                 } else {
                                     this.$store.dispatch("setAuthUser", response.data.user);

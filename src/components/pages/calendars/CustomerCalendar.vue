@@ -273,7 +273,6 @@
 
 <script>
     import axios from "axios";
-    import config from "../../../config";
     import Datepicker from "vuejs-datepicker";
     import {mapState} from "vuex";
     import vueFullCalendar from 'vue-fullcalendar'
@@ -309,7 +308,7 @@
                 showEditAppointment: false,
                 appointmentId: 0,
                 buttonSpin: false,
-                appointmentMaxEndDate: config.appointmentMaxEndDate,
+                appointmentMaxEndDate: process.env.appointmentMaxEndDate,
                 fcEvents: null,
                 startAppointmentDate: new Date().toDateString(),
                 endAppointmentDate: null,
@@ -410,7 +409,7 @@
             loadPrograms(trainerId) {
                 this.programs.showTrainerProgramsList = -1;
                 let vm = this;
-                axios.get(config.api_hostname + '/getProgramsByTrainerId/' + trainerId).then(response => {
+                axios.get(process.env.api_hostname + '/getProgramsByTrainerId/' + trainerId).then(response => {
                     vm.programs.trainerProgramsList = response.data.data;
                     vm.programs.showTrainerProgramsList = 1;
                 });
@@ -418,7 +417,7 @@
             getAppointments() {
                 let vm = this;
                 axios
-                    .get(config.api_hostname + "/customerAppointments")
+                    .get(process.env.api_hostname + "/customerAppointments")
                     .then(response => {
                         vm.fcEvents = response.data.data;
                         vm.fcEvents.map(event => {
@@ -427,7 +426,7 @@
                             }
                         });
                     });
-                axios.get(config.api_hostname + "/trainerList").then(response => {
+                axios.get(process.env.api_hostname + "/trainerList").then(response => {
                     vm.trainers = response.data.trainers;
                 });
             },
@@ -494,7 +493,7 @@
                 //     if (result) {
                 this.buttonSpin = true;
                 axios
-                    .post(config.api_hostname + "/editAppointment", {
+                    .post(process.env.api_hostname + "/editAppointment", {
                         from: "calendar",
                         for: "customer",
                         appointmentId: vm.appointmentId,
@@ -574,7 +573,7 @@
             createAppointment() {
                 let vm = this;
                 axios
-                    .post(config.api_hostname + "/appointmentRequest", {
+                    .post(process.env.api_hostname + "/appointmentRequest", {
                         from: "calendar",
                         for: "customer",
                         userCustomerId: this.userStore.info.id,
@@ -654,7 +653,7 @@
                 let vm = this;
                 this.payment.buttonSpin = true;
                 // this.plan.payButtonSpin = true;
-                Stripe.setPublishableKey(config.stripe.publicKey);
+                Stripe.setPublishableKey(process.env.stripe.publicKey);
                 Stripe.card.createToken(
                     {
                         number: this.payment.number,
@@ -685,7 +684,7 @@
                         ? vm.currentAppointment.trainerPrice
                         : vm.currentAppointment.programPrice;
                 axios
-                    .post(config.api_hostname + "/payAppointment", {
+                    .post(process.env.api_hostname + "/payAppointment", {
                         appointmentId: vm.appointmentId,
                         trainerId: vm.currentAppointment.trainerId,
                         trainerPerHour: vm.currentAppointment.trainerPerHour,

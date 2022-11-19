@@ -136,7 +136,6 @@
 <script>
     import axios from 'axios'
     import {mapState} from 'vuex'
-    import config from '../../config'
 
     export default {
         data(){
@@ -157,7 +156,7 @@
             }
         },
         beforeCreate(){
-            axios.get(config.api_hostname + '/organisationComponentData')
+            axios.get(process.env.api_hostname + '/organisationComponentData')
                 .then(res => {
                     // this.$store.dispatch('setUserRole',res.data.role[0].description);
                     if(userStore.role == 'trainer'){
@@ -174,7 +173,7 @@
             this.org.myOrganisations = '';
             this.getTrainerOrganisations();
             var vm = this;
-            axios.get(config.api_hostname + '/getTrainersList')
+            axios.get(process.env.api_hostname + '/getTrainersList')
                 .then(response => {
                     vm.users = response.data.users;
                 })
@@ -186,7 +185,7 @@
         },
         methods:{
             getAutoLoadData(){
-                axios.get(config.api_hostname + '/organisationComponentData')
+                axios.get(process.env.api_hostname + '/organisationComponentData')
                     .then(res => {
                         this.$store.dispatch('setUserRole',res.data.role[0].description);
                         if(res.data.role[0].description == 'trainer'){
@@ -240,7 +239,7 @@
                 });
             },
             createOrganisation(){
-                axios.post(config.api_hostname + '/newOrganisation',
+                axios.post(process.env.api_hostname + '/newOrganisation',
                     {
                         createdBy:this.userStore.info.id,
                         name:this.org.organisationName,
@@ -263,14 +262,14 @@
                     });
             },
             getTrainerOrganisations(){
-                axios.get(config.api_hostname + '/trainerOrganisations')
+                axios.get(process.env.api_hostname + '/trainerOrganisations')
                     .then(response => {
                         this.org.organisations = response.data.organisations;
                         this.mergeStatus();
                     });
             },
             makeMainOrganisation(org){
-                axios.post(config.api_hostname + '/setMainOrganisation',
+                axios.post(process.env.api_hostname + '/setMainOrganisation',
                     {
                         trainerId:this.userStore.info.id,
                         organisationId:org.id
@@ -280,7 +279,7 @@
                     })
             },
             setInvitation(org,status){
-                axios.post(config.api_hostname + '/setInvitation',{
+                axios.post(process.env.api_hostname + '/setInvitation',{
                     trainerId:this.userStore.info.id,
                     organisationId:org.id,
                     status:status
@@ -321,7 +320,7 @@
                     showCloseButton: true,
                     target: $('#rtl-container')[0]
                 }).then(result => {
-                    axios.post(config.api_hostname + '/closeOrganisation',{
+                    axios.post(process.env.api_hostname + '/closeOrganisation',{
                         orgId:id
                     }).then(response => {
                         this.org.myOrganisations = response.data.myOrgs;
@@ -345,7 +344,7 @@
                     showCloseButton: true,
                     target: $('#rtl-container')[0]
                 }).then(result => {
-                    axios.post(config.api_hostname + '/leaveOrganisation',{
+                    axios.post(process.env.api_hostname + '/leaveOrganisation',{
                         orgId:id
                     }).then(response => {
                         this.$notify({

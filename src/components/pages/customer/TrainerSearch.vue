@@ -11,9 +11,9 @@
                 </div>
                 <div class="col-12 col-sm-5">
                     <div class="form-group">
-                        <input list="locationsList" v-validate="'required'" name="city"
-                            @keypress="trainerSearchOnChange" :data-vv-as="$t('Location')" type="text" v-model="city"
-                            class="form-control" autocomplete="off">
+                        <input list="locationsList" v-validate="'required'" name="city" @keypress="citySearchOnChange"
+                            :data-vv-as="$t('Location')" type="text" v-model="city" class="form-control"
+                            autocomplete="off">
                         <datalist id="locationsList">
                             <option :key="location.name" v-for="location in locationsList">{{ location.name }}</option>
                         </datalist>
@@ -60,7 +60,7 @@
                                             <i class="fa fa-user"></i>
                                         </a>
                                         <a href="javascript:void(0)" v-else>
-                                            <router-link :to="`/organisations/${t.orgId}`">
+                                            <router-link :to="`/organisations/${t.id}`">
                                                 <i class="fa fa-arrow-right"></i>
                                             </router-link>
                                         </a>
@@ -160,7 +160,6 @@
 </template>
 <script>
 import axios from "axios";
-import config from "../../../config.js";
 import { mapState } from 'vuex'
 import AutoComplete from "../../../helpers/maps/AutoComplete";
 import debounce from "debounce";
@@ -169,7 +168,7 @@ import Geocode from "../../../helpers/maps/Geocode";
 export default {
     data() {
         return {
-            storage: config.hostname + "/storage/",
+            storage: process.env.hostname + "/storage/",
             trainer: "",
             city: "",
             trainersList: "",
@@ -189,7 +188,7 @@ export default {
         };
     },
     created() {
-        if (this.search.trainerList.length > 0) {
+        if (this.search.trainerList && this.search.trainerList.length > 0) {
             this.city = this.search.location;
             this.trainersList = this.search.trainerList;
             this.paginate.list = this.trainersList.slice(this.paginate.index, this.paginate.lastIndex);
@@ -249,7 +248,7 @@ export default {
                     }
 
                     if (!this.locationsList || !this.locationsList.find(item => item.name == this.city)) {
-                        alert('Please a location from dropdown')
+                        alert(this.$t('Please a location from dropdown'))
                         return;
                     }
 
@@ -258,23 +257,20 @@ export default {
                     await client.init();
                     const coords = client.getCoords();
 
-                    axios
-                        .post(`${config.api_hostname}/search-trainers`, {
+                    const trainersResponse = await axios
+                        .post(`${process.env.api_hostname}/search-trainers`, {
                             latitude: coords.lat,
                             longitude: coords.lon
                         })
-                        .then(response => {
-                            this.searchResponse(response, 'trainers');
-                        });
                     // get organisations
-                    axios
-                        .post(`${config.api_hostname}/search-organisations`, {
+                    const orgsResponse = await axios
+                        .post(`${process.env.api_hostname}/search-organisations`, {
                             latitude: coords.lat,
                             longitude: coords.lon
                         })
-                        .then(response => {
-                            this.searchResponse(response, 'organisations');
-                        });
+
+                    this.searchResponse(trainersResponse, 'trainers');
+                    this.searchResponse(orgsResponse, 'organisations');
                 }
             });
         },
@@ -310,7 +306,7 @@ export default {
             this.rewards = 0;
             let vm = this;
             axios
-                .post(config.api_hostname + "/trainerRewards", { id: id })
+                .post(process.env.api_hostname + "/trainerRewards", { id: id })
                 .then(response => {
                     vm.rewards = response.data.rewards;
                 });
@@ -320,7 +316,7 @@ export default {
                 }
             }
         },
-        trainerSearchOnChange: debounce(async function (e) {
+        citySearchOnChange: debounce(async function (e) {
             const client = new AutoComplete(this.city)
             await client.init();
             this.locationsList = client.getLocations()
@@ -338,7 +334,7 @@ export default {
         //         await client.init();
         //         const coords = client.getCoords();
 
-        //         axios.post(config.api_hostname + '/search-guest',{latitude: coords.lat, longitude: coords.lon})
+        //         axios.post(process.env.api_hostname + '/search-guest',{latitude: coords.lat, longitude: coords.lon})
         //             .then(response => {
         //                 this.$store.dispatch("setTrainers", response.data.data);
         //             });
