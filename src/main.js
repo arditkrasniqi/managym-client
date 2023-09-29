@@ -9,7 +9,7 @@ import Auth from "./packages/auth/Auth.js";
 import { store } from "./store/store";
 import VueSweetAlert from "vue-sweetalert";
 import VueI18n from "vue-i18n";
-// import de from './i18n/de.js'
+import de from "./i18n/de.js";
 import FullCalendar from "vue-full-calendar";
 
 Vue.config.productionTip = false;
@@ -43,8 +43,8 @@ if (localStorage.getItem("locale") === null) {
 
 const i18n = new VueI18n({
   silentTranslationWarn: true,
-  locale: localStorage.getItem("locale")
-  // messages: { de },
+  locale: localStorage.getItem("locale"),
+  messages: { de }
 });
 
 new Vue({

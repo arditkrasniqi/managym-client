@@ -28,11 +28,11 @@
                                             {{ appointment.description }}</td>
                                         <!--<td>{{ appointment.firstname }} {{ appointment.lastname }}</td>-->
                                         <td>{{ appointments != '_' && appointments.length > 0 ?
-                                                appointment.appointmentDate.split(' ')[1] : ''
+                                            appointment.appointmentDate.split(' ')[1] : ''
                                         }}
                                         </td>
                                         <td>{{ appointments != '_' && appointments.length > 0 ?
-                                                appointment.appointmentEndDate.split(' ')[1] : ''
+                                            appointment.appointmentEndDate.split(' ')[1] : ''
                                         }}
                                         </td>
                                         <td class="icons"><a @click="appointmentDetails(appointment.id)"

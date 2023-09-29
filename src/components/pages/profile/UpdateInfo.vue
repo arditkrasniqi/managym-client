@@ -31,8 +31,16 @@
                     <div v-if="userStore.role == 'trainer'">
                         <div class="form-group">
                             <label>{{ $t('Location') }}</label>
-                            <input v-validate="'required'" v-model="user.location" type="text" name="location"
-                                :data-vv-as="$t('Location')" id="google-input" class="form-control">
+                            <input list="locationsList" v-validate="'required'" v-model="user.location" type="text"
+                                name="location" :data-vv-as="$t('Location')" @keypress="citySearchOnChange"
+                                class="form-control">
+                            <div v-if="locationSpinner">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                            <datalist id="locationsList">
+                                <option :key="location.name" v-for="location in locationsList">{{ location.name }}
+                                </option>
+                            </datalist>
                             <span v-show="errors.has('location')"
                                 class="text-danger">{{ errors.first('location') }}</span>
                         </div>
@@ -76,12 +84,18 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
+import debounce from "debounce";
+import AutoComplete from "../../../helpers/maps/AutoComplete";
+import Geocode from "../../../helpers/maps/Geocode";
 
 export default {
     data() {
         return {
             user: null,
             updateUserSpinner: false,
+            locationsList: null,
+            locationSpinner: false,
+            locationChanged: false
         };
     },
     created() {
@@ -95,13 +109,37 @@ export default {
     mounted() {
     },
     methods: {
+        citySearchOnChange: debounce(async function (e) {
+            this.locationSpinner = true
+            this.locationChanged = true
+            const client = new AutoComplete(this.user.location)
+            await client.init();
+            this.locationsList = client.getLocations()
+            this.locationSpinner = false
+        }, 500),
         updateInfo() {
             let vm = this;
-            this.user.location = document.getElementById('google-input').value;
-            this.$validator.validateAll().then(result => {
+
+            this.$validator.validateAll().then(async result => {
                 if (result) {
+                    if (this.locationChanged) {
+                        if (!this.locationsList || !this.locationsList.length) {
+                            this.$swal(this.$t('We cant find that location, please try again'))
+                            return;
+                        }
+                        if (!this.locationsList.find(item => item.name == this.user.location)) {
+                            this.$swal(this.$t('Please choose a location from the dropdown'))
+                            return;
+                        }
+                    }
+
                     this.updateUserSpinner = true;
                     let data = {};
+
+                    const client = new Geocode(this.user.location)
+                    await client.init();
+                    const coords = client.getCoords();
+
                     if (this.userStore.role == "trainer") {
                         data = {
                             userId: this.user.userId,
@@ -109,6 +147,8 @@ export default {
                             lastname: this.user.lastname,
                             email: this.user.email,
                             location: this.user.location,
+                            latitude: coords.lat,
+                            longitude: coords.lon,
                             description: this.user.description,
                             availableFrom: this.user.availableFrom,
                             availableTo: this.user.availableTo,
@@ -130,6 +170,7 @@ export default {
                     axios
                         .put(process.env.api_hostname + "/updateUserInfo", data)
                         .then(response => {
+                            this.locationChanged = false
                             if (response.data.status == 'conf_email') {
                                 this.$swal({
                                     title: "Confirm Email",

@@ -81,7 +81,7 @@
 import { mapState } from "vuex";
 
 export default {
-    name: "content-4trainer",
+    name: "content-managym",
     data() {
         return {
             storage: process.env.domain + "/storage/"

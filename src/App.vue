@@ -222,7 +222,7 @@ body {
 @media screen and (max-width: 770px) {
 
     main,
-    main.first-main {
+    .top-notification {
         margin-left: 0 !important;
     }
 

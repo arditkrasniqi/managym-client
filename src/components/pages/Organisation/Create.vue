@@ -19,6 +19,9 @@
                         <input @keypress="citySearchOnChange" list="locationsList" name="location"
                             :data-vv-as="$t('Location')" v-model="organisation.location" type="text"
                             :placeholder="$t('Location')" class="form-control" autocomplete="off">
+                        <div v-if="locationSpinner">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </div>
                         <datalist id="locationsList">
                             <option :key="location.name" v-for="location in locationsList">{{ location.name }}</option>
                         </datalist>
@@ -102,7 +105,8 @@ export default {
                 latitude: 0,
                 longitude: 0
             },
-            locationsList: null
+            locationsList: null,
+            locationSpinner: false
         }
     },
     computed: {
@@ -114,10 +118,12 @@ export default {
     },
     methods: {
         citySearchOnChange: debounce(async function (e) {
+            this.locationSpinner = true
             const client = new AutoComplete(this.organisation.location)
             await client.init();
             this.locationsList = client.getLocations()
-        }, 1000),
+            this.locationSpinner = false
+        }, 500),
         addTrainer() {
             if (this.errors.has('email')) {
                 return false;
@@ -135,15 +141,16 @@ export default {
             // @todo Create an organisation on the API
             this.$validator.validateAll().then(async (result) => {
                 if (result) {
-                    this.buttonSpin = true;
-                    let currentLocation = this.locationsList.find(item => item.name === this.organisation.location)
-                    if (!currentLocation) {
-                        alert(this.$t('Please a location from dropdown'))
-                        // const client = new Geocode(this.organisation.location)
-                        // await client.init();
-                        // currentLocation = client.getCoords()
+                    if (!this.locationsList || !this.locationsList.length) {
+                        this.$swal(this.$t('We cant find that location, please try again'))
+                        return;
+                    }
+                    if (!this.locationsList.find(item => item.name == this.organisation.location)) {
+                        this.$swal(this.$t('Please choose a location from the dropdown'))
+                        return;
                     }
 
+                    this.buttonSpin = true;
                     this.organisation.latitude = currentLocation.lat;
                     this.organisation.longitude = currentLocation.lon;
                     this.req(currentLocation.lat, currentLocation.lon, process.env.domain + '/organisations/');

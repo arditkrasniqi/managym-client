@@ -4,9 +4,8 @@
         <div class="container">
             <nav class="navbar navbar-expand-lg">
                 <a class="logo navbar-brand" href="javascript:void(0)"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon fa fa-bars"></span>
                 </button>
 
@@ -24,7 +23,7 @@
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#registerModal"
                             id="registerModalBtn">{{ $t('Register') }}</a>
                         <div class="btn-group localisation">
-                            <a class="dropdown-toggle no-triangle nav-link" data-toggle="dropdown" aria-haspopup="true"
+                            <a class="dropdown-toggle no-triangle nav-link pl-0" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 <i class="fa fa-globe"></i>
                             </a>
@@ -36,20 +35,22 @@
                     </form>
                 </div>
             </nav>
-            <h1 class="header-title ml-auto mr-auto">{{ $t('Find a trainer near you') }}</h1>
+            <h1 class="header-title ml-auto mr-auto text-center">{{ $t('Find a trainer near you') }}</h1>
             <div class="search-form ml-auto mr-auto">
                 <div class="row">
                     <div class="col-12 col-sm-8">
                         <input @keypress="citySearchOnChange" list="locationsList" type="search"
                             v-model="trainerSearch.city" class="form-control" :placeholder="$t('City to search in')">
+                        <div v-if="locationSpinner">
+                            <i class="fa fa-spin fa-spinner"></i>
+                        </div>
                         <datalist id="locationsList">
                             <option :key="location.name" v-for="location in locationsList">{{ location.name }}</option>
                         </datalist>
                     </div>
                     <div class="col-12 col-sm-4">
                         <button @click="searchTrainer" class="btn btn-block" :disabled="!this.locationsList">
-                            <i v-if="trainerSearch.buttonSpin && trainerList.length == 0"
-                                class="fa fa-spinner fa-spin"></i>
+                            <i v-if="trainerSearch.buttonSpin && trainerList.length == 0" class="fa fa-spinner fa-spin"></i>
                             <span v-if="trainerList.length > 0 || !trainerSearch.buttonSpin">{{ $t('Search') }}</span>
                         </button>
                     </div>
@@ -74,8 +75,8 @@
                                     <form @submit.prevent="login">
                                         <div class="form-group">
                                             <input data-vv-validate-on="blur" v-validate="'required|email'"
-                                                v-model="auth.username" name="loginUsername" data-vv-as="Email"
-                                                type="text" :placeholder="$t('Email')" class="form-control">
+                                                v-model="auth.username" name="loginUsername" data-vv-as="Email" type="text"
+                                                :placeholder="$t('Email')" class="form-control">
                                             <span v-show="errors.has('loginUsername')"
                                                 class="text-danger">{{ errors.first('loginUsername') }}</span>
                                         </div>
@@ -187,7 +188,7 @@ import Geocode from '../../helpers/maps/Geocode'
 import debounce from 'debounce'
 
 export default {
-    name: "header-4trainer",
+    name: "header-managym",
     components: {
         'register-comp': register
     },
@@ -236,7 +237,8 @@ export default {
             optional: {
                 org: false,
             },
-            locationsList: null
+            locationsList: null,
+            locationSpinner: false,
         };
     },
     computed: {
@@ -264,19 +266,24 @@ export default {
             this.showLogin = !this.showLogin;
         },
         citySearchOnChange: debounce(async function (e) {
+            this.locationSpinner = true;
             const client = new AutoComplete(this.trainerSearch.city)
             await client.init();
             this.locationsList = client.getLocations()
-        }, 1000),
+            this.locationSpinner = false;
+        }, 500),
         searchTrainer: async function () {
             if (this.trainerSearch.city !== "") {
-                if (!this.locationsList || !this.locationsList.find(item => item.name == this.trainerSearch.city)) {
-                    alert(this.$t('Please a location from dropdown'))
+                if (!this.locationsList || !this.locationsList.length) {
+                    this.$swal(this.$t('We cant find that location, please try again'))
+                    return;
+                }
+                if (!this.locationsList.find(item => item.name == this.trainerSearch.city)) {
+                    this.$swal(this.$t('Please choose a location from the dropdown'))
                     return;
                 }
 
                 this.trainerSearch.buttonSpin = true;
-
                 const client = new Geocode(this.trainerSearch.city)
                 await client.init();
                 const coords = client.getCoords();
@@ -284,6 +291,7 @@ export default {
                 axios.post(process.env.api_hostname + '/search-guest', { latitude: coords.lat, longitude: coords.lon })
                     .then(response => {
                         this.$store.dispatch("setTrainers", response.data.data);
+                        this.trainerSearch.buttonSpin = false;
                     });
             }
         },
@@ -321,7 +329,7 @@ export default {
             this.loginSpinner = false;
             setTimeout(function () {
                 $('#registerModal').find('.text-danger');
-            }, 5000);
+            }, 1000);
         },
         showRegisterForm() {
             $('#loginModal').modal('hide');
@@ -483,9 +491,9 @@ export default {
 
         .logo {
             /*margin-right: 84px;*/
-            width: 70px;
-            height: 70px;
-            background-image: url("../../assets/img/logo.png");
+            width: 85px;
+            height: 51px;
+            background-image: url("../../assets/img/logo-inverse.png");
             background-size: 100% 100%;
         }
 
@@ -567,7 +575,7 @@ export default {
         height: 50%;
         top: 0;
         left: 0;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.6);
     }
 
     .modal {

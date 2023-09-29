@@ -154,9 +154,9 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <span class="total-price">{{ $t('Total') }}:
-                                                    <span v-if="appointment.trainerPrice != null">CHF
+                                                    <span v-if="appointment.trainerPrice != null">{{ currency }}
                                                         {{ appointment.trainerPrice }}</span>
-                                                    <span v-else>CHF {{ appointment.programPrice }}</span>
+                                                    <span v-else>{{ currency }} {{ appointment.programPrice }}</span>
                                                 </span>
                                             </div>
                                             <div class="col-6">
@@ -390,11 +390,6 @@ export default {
         this.getOrganisationTrainersPrograms();
         this.getOrganisationTrainers();
     },
-    computed: {
-        ...mapState({
-            userStore: state => state.user
-        })
-    },
     methods: {
         getOrganisationTrainers() {
             let vm = this;
@@ -539,7 +534,7 @@ export default {
                     }
                     setTimeout(() => {
                         // this.addButtons();
-                    }, 1000);
+                    }, 500);
                 });
         },
         getOrganisationAppointments() {
@@ -734,7 +729,13 @@ export default {
                     $('#appointment').modal('hide');
                 });
         }
-    }
+    },
+    computed: {
+        ...mapState({
+            userStore: state => state.user,
+            currency: state => state.currency
+        })
+    },
 }
 </script>
 

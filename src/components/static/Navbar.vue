@@ -2,7 +2,7 @@
     <header id="mainNav" v-if="userStore.auth">
         <nav class="navbar navbar-expand-md navbar-dark fixed-top ">
             <a class="navbar-brand" href="javascript:void(0)">
-                <img src="../../assets/img/logo-inverse.png" alt="">
+                <img src="../../assets/img/logo.png" alt="">
                 <i @click="toggleSidebar()" class="toggleMenu fa fa-chevron-circle-right"></i>
             </a>
             <!--<a class="toggleMenu" @click="toggleSidebar" href="javascript:void(0)">-->
@@ -16,28 +16,13 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav mr-auto">
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="#"><i class="fa fa-bars"></i><span class="sr-only">(current)</span></a>-->
-                    <!--</li>-->
-                </ul>
-                <!--<div class="btn-group">-->
-                <!--<a class="dropdown-toggle nav-link nofitications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                <!--<i class="fa fa-bell-o"></i>-->
-                <!--</a>-->
-                <!--<div class="dropdown-menu dropdown-menu-right">-->
-                <!--<button class="dropdown-item" type="button">Sent a request</button>-->
-                <!--<button class="dropdown-item" type="button">Sent a request</button>-->
-                <!--</div>-->
-                <!--</div>-->
+                <ul class="navbar-nav mr-auto"></ul>
                 <div class="btn-group" v-if="userStore.info">
-                    <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+                    <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ userStore.info.firstname }} {{ userStore.info.lastname }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="btn" @click="goToMyProfile"
-                            v-if="userStore.role === 'trainer'">{{ $t('My Profile') }}</a>
+                        <a class="btn" @click="goToMyProfile" v-if="userStore.role === 'trainer'">{{ $t('My Profile') }}</a>
                         <router-link to="/profile">{{ $t('Settings') }}</router-link>
                         <a v-if="userStore.role === 'trainer'" href="javascript:void(0)" data-toggle="modal"
                             data-target="#affiliateLinkModal" class="dropdown-item">{{ $t('Affiliate Link') }}</a>
@@ -90,9 +75,7 @@
     </header>
 </template>
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
-import URL from '../../assets/js/URL-Parser/js/URLParser'
 
 export default {
     created() {
@@ -183,14 +166,8 @@ header {
             position: relative;
 
             img {
-                width: 58px;
-                height: 41px;
-            }
-
-            i {
-                position: absolute;
-                top: 11px;
-                right: -30px;
+                width: 85px;
+                height: 51px;
             }
         }
 
@@ -278,6 +255,12 @@ header {
 
 .toggleMenu {
     display: none;
+    position: absolute;
+    bottom: -30px;
+    left: -16px;
+    background: #37a1e7;
+    padding: 5px;
+    color: white !important;
 }
 
 #mainNav {

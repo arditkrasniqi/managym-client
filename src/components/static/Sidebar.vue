@@ -1,107 +1,101 @@
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <nav v-if="userStore.auth && userStore.info" class="col-sm-3 col-md-2 d-none d-sm-block bg-white sidebar">
-                <div class="col-12">
-                    <div class="row menu-profile">
-                        <div class="col-3">
-                            <img :src="storage + userStore.info.avatar" alt="">
-                        </div>
-                        <div class="col-8">
-                            <p>{{ userStore.info.firstname }} {{ userStore.info.lastname }}</p>
-                            <span class="fa fa-cog rounded-left" @click="goToProfile"></span>
-                            <span class="fa fa-sign-out rounded-right" @click="logout"></span>
-                        </div>
+    <div>
+        <nav v-if="userStore.auth && userStore.info" class="col-sm-3 col-md-2 d-none d-sm-block bg-white sidebar">
+            <div class="col-12">
+                <div class="row menu-profile">
+                    <div class="col-3">
+                        <img :src="storage + userStore.info.avatar" alt="">
+                    </div>
+                    <div class="col-8">
+                        <p>{{ userStore.info.firstname }} {{ userStore.info.lastname }}</p>
+                        <span class="fa fa-cog rounded-left" @click="goToProfile"></span>
+                        <span class="fa fa-sign-out rounded-right" @click="logout"></span>
                     </div>
                 </div>
-                <ul class="nav nav-pills flex-column" id="menu">
+            </div>
+            <ul class="nav nav-pills flex-column" id="menu">
+                <li @click="toggleSidebar" class="nav-item">
+                    <router-link to="/dashboard">
+                        <i class="fa fa-tachometer"></i> {{ $t('Dashboard') }}
+                    </router-link>
+                    <!--<a @click="setActive()" class="nav-link" data-url="search-trainer" href="#/search-trainer"><i class="fa fa-search"></i> Search Trainer</a>-->
+                </li>
+                <div v-if="userStore.role == 'admin'">
                     <li @click="toggleSidebar" class="nav-item">
-                        <router-link to="/dashboard">
-                            <i class="fa fa-tachometer"></i> {{ $t('Dashboard') }}
+                        <router-link :to="{ name: 'trainer.certificates.admin' }">
+                            <i class="fa fa-certificate"></i> {{ $t('Certificates') }}
+                        </router-link>
+                        <router-link :to="{ name: 'payout.requests' }">
+                            <i class="fa fa-credit-card"></i> {{ $t('Payout Requests') }}
                         </router-link>
                         <!--<a @click="setActive()" class="nav-link" data-url="search-trainer" href="#/search-trainer"><i class="fa fa-search"></i> Search Trainer</a>-->
                     </li>
-                    <div v-if="userStore.role == 'admin'">
-                        <li @click="toggleSidebar" class="nav-item">
-                            <router-link :to="{ name: 'trainer.certificates.admin' }">
-                                <i class="fa fa-certificate"></i> {{ $t('Certificates') }}
-                            </router-link>
-                            <router-link :to="{ name: 'payout.requests' }">
-                                <i class="fa fa-credit-card"></i> {{ $t('Payout Requests') }}
-                            </router-link>
-                            <!--<a @click="setActive()" class="nav-link" data-url="search-trainer" href="#/search-trainer"><i class="fa fa-search"></i> Search Trainer</a>-->
-                        </li>
-                    </div>
-                    <div v-else>
-                        <li @click="toggleSidebar" class="nav-item">
-                            <router-link to="/organisations/myOrgs">
-                                <i class="fa fa-users"></i> {{ $t('My Organisations') }}
-                                <!--<ul class="dropdown">-->
-                                <!--<li>-->
-                                <!--<router-link to="/organisations/myOrgs">My Organisations</router-link>-->
-                                <!--</li>-->
-                                <!--</ul>-->
-                            </router-link>
-                            <!--<a @click="setActive()" class="nav-link" data-url="organisations" href="#/organisations"><i class="fa fa-users"></i> Organisations <span class="sr-only">(current)</span></a>-->
-                        </li>
-                        <li @click="toggleSidebar" class="nav-item">
-                            <router-link to="/search-trainer">
-                                <i class="fa fa-search"></i> {{ $t('Search Trainer') }}
-                            </router-link>
-                            <!--<a @click="setActive()" class="nav-link" data-url="search-trainer" href="#/search-trainer"><i class="fa fa-search"></i> Search Trainer</a>-->
-                        </li>
-                        <li @click="toggleSidebar" class="nav-item">
-                            <router-link to="/calendar">
-                                <i class="fa fa-calendar"></i> {{ $t('Calendar') }}
-                            </router-link>
-                        </li>
-                        <!--If role == trainer-->
-                        <li @click="toggleSidebar" v-if="userStore.role == 'trainer'" class="nav-item">
-                            <router-link to="/my-programs">
-                                <i class="fa fa-calendar-plus-o"></i> {{ $t('Programs') }}
-                            </router-link>
-                            <router-link to="/account-balance">
-                                <i class="fa fa-balance-scale"></i> {{ $t('Account Balance') }}
-                            </router-link>
-                            <router-link to="/invoices" v-if="userStore.info.planId != 1">
-                                <i class="fa fa-shopping-cart"></i> {{ $t('Invoices') }}
-                            </router-link>
-                        </li>
-                        <!--End If-->
-                    </div>
-                </ul>
-            </nav>
-            <main role="main" class="first-main"
-                v-if="userStore.info && userStore.info.emailConfirmed === 0 && userStore.showConfirmEmail">
-                <div class="row" v-if="emailConfSpinner">
-                    <div class="col-12 text-center">
-                        <i class="conf-spinner fa fa-spinner fa-spin"></i>
-                    </div>
                 </div>
                 <div v-else>
-                    <p>Hi, {{ userStore.info.firstname }}</p>
-                    <p>{{ $t('We have sent you a confirmation link to') }} "{{ userStore.info.email }}"
-                        {{ $t('to confirm email') }}.</p>
-                    <p>{{ $t('Did not get any email from us') }} ? <a class="btn primary-bg" id="resend-conf-email"
-                            @click="resendConfirmation" href="javascript:void(0)">{{ $t('Resend Confirmation') }}</a>
-                    </p>
+                    <li @click="toggleSidebar" class="nav-item">
+                        <router-link to="/organisations/myOrgs">
+                            <i class="fa fa-users"></i> {{ $t('My Organisations') }}
+                            <!--<ul class="dropdown">-->
+                            <!--<li>-->
+                            <!--<router-link to="/organisations/myOrgs">My Organisations</router-link>-->
+                            <!--</li>-->
+                            <!--</ul>-->
+                        </router-link>
+                        <!--<a @click="setActive()" class="nav-link" data-url="organisations" href="#/organisations"><i class="fa fa-users"></i> Organisations <span class="sr-only">(current)</span></a>-->
+                    </li>
+                    <li @click="toggleSidebar" class="nav-item">
+                        <router-link to="/search-trainer">
+                            <i class="fa fa-search"></i> {{ $t('Search Trainer') }}
+                        </router-link>
+                        <!--<a @click="setActive()" class="nav-link" data-url="search-trainer" href="#/search-trainer"><i class="fa fa-search"></i> Search Trainer</a>-->
+                    </li>
+                    <li @click="toggleSidebar" class="nav-item">
+                        <router-link to="/calendar">
+                            <i class="fa fa-calendar"></i> {{ $t('Calendar') }}
+                        </router-link>
+                    </li>
+                    <!--If role == trainer-->
+                    <li @click="toggleSidebar" v-if="userStore.role == 'trainer'" class="nav-item">
+                        <router-link to="/my-programs">
+                            <i class="fa fa-calendar-plus-o"></i> {{ $t('Programs') }}
+                        </router-link>
+                        <router-link to="/account-balance">
+                            <i class="fa fa-balance-scale"></i> {{ $t('Account Balance') }}
+                        </router-link>
+                        <router-link to="/invoices" v-if="userStore.info.planId != 1">
+                            <i class="fa fa-shopping-cart"></i> {{ $t('Invoices') }}
+                        </router-link>
+                    </li>
+                    <!--End If-->
                 </div>
-            </main>
-            <main role="main" :class="{ 'guest-main': !userStore.auth }">
-                <router-view></router-view>
-            </main>
-        </div>
+            </ul>
+        </nav>
+        <main role="main" class="first-main"
+            v-if="userStore.info && userStore.info.emailConfirmed === 0 && userStore.showConfirmEmail">
+            <div class="row" v-if="emailConfSpinner">
+                <div class="col-12 text-center">
+                    <i class="conf-spinner fa fa-spinner fa-spin"></i>
+                </div>
+            </div>
+            <div v-else>
+                <p>Hi, {{ userStore.info.firstname }}</p>
+                <p>{{ $t('We have sent you a confirmation link to') }} "{{ userStore.info.email }}"
+                    {{ $t('to confirm email') }}.</p>
+                <p>{{ $t('Did not get any email from us') }}? <a class="btn primary-bg" id="resend-conf-email"
+                        @click="resendConfirmation" href="javascript:void(0)">{{ $t('Resend Confirmation') }}</a>
+                </p>
+            </div>
+        </main>
+        <main role="main" :class="{ 'guest-main': !userStore.auth }">
+            <router-view></router-view>
+        </main>
     </div>
 </template>
 <script>
-import Content from "./Content.vue";
 import { mapState } from "vuex";
 import axios from 'axios'
 
 export default {
-    components: {
-        "content-area": Content
-    },
     data() {
         return {
             storage: process.env.hostname + "/storage/",

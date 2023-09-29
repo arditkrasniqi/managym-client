@@ -164,7 +164,7 @@ export default {
   "Ability to manage trainers": "Trainerverwaltung",
   "Ability to manage multiple locations": "Standortverwaltung",
   "Analytics Tools": "Analytics",
-  "Provision for 4trainer": "4trainer Provision",
+  "Provision for ManaGym": "ManaGym Provision",
   "Monthly Cost": "Monatskosten",
   "Yearly Cost": "Jahreskosten",
   Choosen: "Gewählt",
@@ -197,7 +197,7 @@ export default {
   "You have requested automatic payouts":
     "Sie haben automatische Auszahlung eingeschaltet",
   "Request Payout": "Auszahlung anfordern",
-  "No payouts can be made: CHF 0.":
+  "No payouts can be made, you have zero balance":
     "Auszahlungen können nicht gemacht werden ohne Guthaben",
   "In order to request another payout, you must wait":
     "Um eine weitere Auszahlung zu tätigen müssen Sie warten",
@@ -316,5 +316,8 @@ export default {
   day: "tag",
   today: "heute",
   "all-day": "den ganzen Tag",
-  "Please a location from dropdown": "Please a location from dropdown"
+  "Please choose a location from the dropdown":
+    "Please choose a location from the dropdown",
+  "We cant find that location, please try again":
+    "We cant find that location, please try again"
 };

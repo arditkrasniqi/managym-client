@@ -20,7 +20,7 @@
                                 :key="payout.id">
                                 <td>{{ payout.firstname }} {{ payout.lastname }}</td>
                                 <td>{{ payout.bank }}</td>
-                                <td>CHF {{ payout.price }}</td>
+                                <td>{{ currency }} {{ payout.price }}</td>
                                 <td class="text-center">
                                     <a @click="markAsDone(payout)" class="icons" href="javascript:void(0)">
                                         <i class="fa fa-square-o"></i>
@@ -30,7 +30,7 @@
                             <tr v-for="payout in payoutRequests" :key="payout.id">
                                 <td>{{ payout.firstname }} {{ payout.lastname }}</td>
                                 <td>{{ payout.bank }}</td>
-                                <td>CHF {{ payout.price }}</td>
+                                <td>{{ currency }} {{ payout.price }}</td>
                                 <td class="text-center">
                                     <a @click="markAsDone(payout)" class="icons" href="javascript:void(0)">
                                         <i class="fa fa-square-o"></i>
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import axios from 'axios'
 
 export default {
@@ -104,7 +105,12 @@ export default {
                 }
             );
         }
-    }
+    },
+    computed: {
+        ...mapState({
+            currency: state => state.currency
+        })
+    },
 }
 </script>
 

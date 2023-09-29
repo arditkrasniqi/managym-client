@@ -129,7 +129,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            {{ $t('Provision for 4trainer') }}
+                                            {{ $t('Provision for ManaGym') }}
                                         </td>
                                         <td class="text-center">
                                             10%
@@ -147,15 +147,15 @@
                                     <tr>
                                         <td>{{ $t('Monthly Cost') }}</td>
                                         <td class="text-center" v-for="p in trainerPlans">
-                                            <span v-if="p.monthlyPay == null">CHF 0</span>
-                                            <span v-else>CHF {{ p.monthlyPay }}</span>
+                                            <span v-if="p.monthlyPay == null">{{ currency }} 0</span>
+                                            <span v-else>{{ currency }} {{ p.monthlyPay }}</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>{{ $t('Yearly Cost') }}</td>
                                         <td class="text-center" v-for="p in trainerPlans">
-                                            <span v-if="p.yearlyPay == null">CHF 0</span>
-                                            <span v-else>CHF {{ p.yearlyPay }}</span>
+                                            <span v-if="p.yearlyPay == null">{{ currency }} 0</span>
+                                            <span v-else>{{ currency }} {{ p.yearlyPay }}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -256,7 +256,7 @@
                 <h5 class="calendar-no-access">{{ $t('Demo Trainers do not have access to calendar') }}</h5>
                 <div class="card bg-faded">
                     <div class="card-block calendar-info">
-                        <h1>{{ $t('What is the Calendar') }} ?</h1>
+                        <h1>{{ $t('What is the Calendar') }}?</h1>
                         <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
                             laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
                             architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
@@ -333,9 +333,11 @@
                                                 <tr>
                                                     <th>{{ $t('Total Price') }}</th>
                                                     <td>
-                                                        <span v-if="currentAppointment.trainerPrice != null">CHF
+                                                        <span
+                                                            v-if="currentAppointment.trainerPrice != null">{{ currency }}
                                                             {{ currentAppointment.trainerPrice }}</span>
-                                                        <span v-else>CHF {{ currentAppointment.programPrice }}</span>
+                                                        <span v-else>{{ currency }}
+                                                            {{ currentAppointment.programPrice }}</span>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -995,7 +997,8 @@ export default {
         ...mapState({
             userStore: state => state.user,
             trainerPlan: state => state.authTrainerPlan,
-            trainerPlans: state => state.trainerPlans
+            trainerPlans: state => state.trainerPlans,
+            currency: state => state.currency
         })
     },
     components: {

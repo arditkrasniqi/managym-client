@@ -11,33 +11,35 @@
                         <!--<center>-->
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#profilePictureModal">
                             <img class="card-header-profile-picture" :src="hostname + userStore.info.avatar"
-                                 alt="Profile Picture">
+                                alt="Profile Picture">
                         </a>
                         <div class="form-group">
                             <a data-toggle="modal" data-target="#profilePictureModal" href="javascript:void(0)"
-                               class="card-title">{{$t('Change Profile Picture')}}</a>
+                                class="card-title">{{ $t('Change Profile Picture') }}</a>
                         </div>
                         <!--</center>-->
                     </div>
                     <div class="card-block">
                         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
-                             aria-orientation="vertical">
+                            aria-orientation="vertical">
                             <a @click="setActiveModule('accountSettings')" class="nav-link active" id="v-pills-home-tab"
-                               data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
-                               aria-selected="true">{{$t('Account Settings')}}</a>
+                                data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
+                                aria-selected="true">{{ $t('Account Settings') }}</a>
                             <a @click="setActiveModule('changePassword')" class="nav-link" id="v-pills-home-tab"
-                               data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
-                               aria-selected="true">{{$t('Change Password')}}</a>
+                                data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
+                                aria-selected="true">{{ $t('Change Password') }}</a>
                             <a v-if="userStore.role == 'trainer'" @click="setActiveModule('certificates')"
                                 class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile"
-                               role="tab" aria-controls="v-pills-profile" aria-selected="false">{{$t('Certificates')}}</a>
-                            <a v-if="userStore.role == 'trainer'" @click="setActiveModule('trainerPlans')" class="nav-link" id="trainerPlansProfileButton"
-                               data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
-                               aria-selected="true">{{$t('Plans')}}</a>
-                            <a v-if="userStore.role == 'trainer'" @click="setActiveModule('accountBalance')" class="nav-link" id="v-pills-home-tab"
-                               data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
-                               aria-selected="true">{{$t('Account Balance')}}</a>
-                    </div>
+                                role="tab" aria-controls="v-pills-profile"
+                                aria-selected="false">{{ $t('Certificates') }}</a>
+                            <a v-if="userStore.role == 'trainer'" @click="setActiveModule('trainerPlans')"
+                                class="nav-link" id="trainerPlansProfileButton" data-toggle="pill" href="#v-pills-home"
+                                role="tab" aria-controls="v-pills-home" aria-selected="true">{{ $t('Plans') }}</a>
+                            <a v-if="userStore.role == 'trainer'" @click="setActiveModule('accountBalance')"
+                                class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
+                                role="tab" aria-controls="v-pills-home"
+                                aria-selected="true">{{ $t('Account Balance') }}</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -48,9 +50,9 @@
                 <trainer-plans v-else-if="activeModule == 'trainerPlans'"></trainer-plans>
                 <div class="card" v-else-if="activeModule == 'accountBalance'">
                     <h4 class="card-header">
-                        {{$t('Account Balance')}}
+                        {{ $t('Account Balance') }}
                     </h4>
-                    <account-balance ></account-balance>
+                    <account-balance v-if="userStore.info"></account-balance>
                 </div>
             </div>
         </div>
@@ -63,25 +65,27 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">{{$t('Change Profile Picture')}}</h4>
+                        <h4 class="modal-title">{{ $t('Change Profile Picture') }}</h4>
                     </div>
                     <div class="modal-body">
-                        <input id="pictureFile" @change="pictureChanged" type="file" class="form-control" accept="image/*">
+                        <input id="pictureFile" @change="pictureChanged" type="file" class="form-control"
+                            accept="image/*">
                         <div class="text-center form-group">
                             <img @click="browseImage" class="profile-img img-thumbnail"
-                                 src="../../../assets/img/camera.jpg" alt="">
+                                src="../../../assets/img/camera.jpg" alt="">
                         </div>
                         <div v-if="showModalFooter" class="form-group text-center">
                             <i>{{ uploads.picture.name }}</i>
                         </div>
                         <div class="form-group">
-                            <a href="javascript:void(0)" class="btn primary-bg btn-block" @click="browseImage">{{$t('Browse Image')}}</a>
+                            <a href="javascript:void(0)" class="btn primary-bg btn-block"
+                                @click="browseImage">{{ $t('Browse Image') }}</a>
                         </div>
                     </div>
                     <div v-if="showModalFooter" class="modal-footer">
                         <button type="button" class="btn primary-bg" @click="updateProfilePicture">
                             <i v-if="uploads.showSpinner" class="fa fa-spinner fa-spin"></i>
-                            <span v-else>{{$t('Update Profile Picture')}}</span>
+                            <span v-else>{{ $t('Update Profile Picture') }}</span>
                         </button>
                     </div>
                 </div>
@@ -91,151 +95,155 @@
     </div>
 </template>
 <script>
-    import {mapState} from "vuex";
-    import axios from "axios";
-    import Certificates from "./Certificates.vue";
-    import UpdateInfo from "./UpdateInfo.vue";
-    import ChangePassword from "./PasswordChange.vue";
-    import TrainerPlans from './TrainerPlans.vue'
-    import AccountBalance from './AccountBalance.vue'
+import { mapState } from "vuex";
+import axios from "axios";
+import Certificates from "./Certificates.vue";
+import UpdateInfo from "./UpdateInfo.vue";
+import ChangePassword from "./PasswordChange.vue";
+import TrainerPlans from './TrainerPlans.vue'
+import AccountBalance from './AccountBalance.vue'
 
-    export default {
-        data() {
-            return {
-                activeModule: "accountSettings",
-                hostname: process.env.hostname + "/storage/",
-                showModalFooter: false,
-                uploads: {
-                    showSpinner: false,
-                    form: new FormData(),
-                    picture: null,
-                    picInfo: null
-                }
-            };
-        },
-        created(){
-            if(localStorage.getItem('showPlans') != null){
-                this.setActiveModule('trainerPlans');
-                setTimeout(() => {
-                    document.getElementById('trainerPlansProfileButton').click();
-                },500);
-                localStorage.removeItem('showPlans');
+export default {
+    data() {
+        return {
+            activeModule: "accountSettings",
+            hostname: process.env.hostname + "/storage/",
+            showModalFooter: false,
+            uploads: {
+                showSpinner: false,
+                form: new FormData(),
+                picture: null,
+                picInfo: null
             }
+        };
+    },
+    created() {
+        if (localStorage.getItem('showPlans') != null) {
+            this.setActiveModule('trainerPlans');
+            setTimeout(() => {
+                document.getElementById('trainerPlansProfileButton').click();
+            }, 500);
+            localStorage.removeItem('showPlans');
+        }
+    },
+    components: {
+        "trainer-certificates": Certificates,
+        "user-update-info": UpdateInfo,
+        "change-password": ChangePassword,
+        'trainer-plans': TrainerPlans,
+        'account-balance': AccountBalance,
+    },
+    methods: {
+        setActiveModule(moduleName) {
+            this.activeModule = moduleName;
         },
-        components: {
-            "trainer-certificates": Certificates,
-            "user-update-info": UpdateInfo,
-            "change-password": ChangePassword,
-            'trainer-plans': TrainerPlans,
-            'account-balance': AccountBalance,
+        browseImage() {
+            document.getElementById("pictureFile").click();
         },
-        methods: {
-            setActiveModule(moduleName) {
-                this.activeModule = moduleName;
-            },
-            browseImage() {
-                document.getElementById("pictureFile").click();
-            },
-            pictureChanged(e) {
-                this.uploads.picInfo = e.target.files[0].name;
-                this.uploads.picture = e.target.files[0];
-                this.showModalFooter = true;
-            },
-            updateProfilePicture() {
-                let vm = this;
-                let userId = this.userStore.info.hasOwnProperty('userId') ?
-                    this.userStore.info.userId : this.userStore.info.id;
-                this.uploads.showSpinner = true;
-                // this.uploadButtonSpinner = true;
-                this.uploads.form = new FormData();
-                this.uploads.form.append("picture", this.uploads.picture);
+        pictureChanged(e) {
+            this.uploads.picInfo = e.target.files[0].name;
+            this.uploads.picture = e.target.files[0];
+            this.showModalFooter = true;
+        },
+        updateProfilePicture() {
+            let vm = this;
+            let userId = this.userStore.info.hasOwnProperty('userId') ?
+                this.userStore.info.userId : this.userStore.info.id;
+            this.uploads.showSpinner = true;
+            // this.uploadButtonSpinner = true;
+            this.uploads.form = new FormData();
+            this.uploads.form.append("picture", this.uploads.picture);
 
-                let configuration = {
-                    headers: {
-                        "Content-type":
+            let configuration = {
+                headers: {
+                    "Content-type":
                         "multipart/form-data; charset=utf-8; boundary=" +
                         Math.random()
                             .toString()
                             .substr(2)
-                    }
-                };
+                }
+            };
 
-                axios
-                    .post(
-                        process.env.api_hostname + "/updateProfilePicture",
-                        this.uploads.form,
-                        configuration
-                    )
-                    .then(response => {
-                        vm.uploads.showSpinner = false;
-                        axios
-                            .post(process.env.api_hostname + "/savePictureToDB", {
-                                userId: userId,
-                                folder: response.data.folder,
-                                picture: response.data.picture
-                            })
-                            .then(res => {
-                                vm.uploads.showSpinner = false;
-                                vm.userStore.info.avatar = res.data;
-                                $("#profilePictureModal").modal("hide");
-                            });
-                    });
-            },
+            axios
+                .post(
+                    process.env.api_hostname + "/updateProfilePicture",
+                    this.uploads.form,
+                    configuration
+                )
+                .then(response => {
+                    vm.uploads.showSpinner = false;
+                    axios
+                        .post(process.env.api_hostname + "/savePictureToDB", {
+                            userId: userId,
+                            folder: response.data.folder,
+                            picture: response.data.picture
+                        })
+                        .then(res => {
+                            vm.uploads.showSpinner = false;
+                            vm.userStore.info.avatar = res.data;
+                            $("#profilePictureModal").modal("hide");
+                        });
+                });
         },
-        computed: {
-            ...mapState({
-                userStore: store => store.user
-            })
-        }
-    };
+    },
+    computed: {
+        ...mapState({
+            userStore: store => store.user
+        })
+    }
+};
 </script>
 <style lang="scss">
-    .trainer-info {
-        .card-header {
-            text-align: center;
-            .card-title {
-                margin-top: 15px;
-            }
+.trainer-info {
+    .card-header {
+        text-align: center;
+
+        .card-title {
+            margin-top: 15px;
+        }
+    }
+}
+
+.card {
+    .card-header {
+        img {
+            background: white;
+            width: 40%;
+            border-radius: 100%;
+            border: 1px solid #ccc;
+        }
+
+        p {
+            font-size: 14px;
+            margin: 2px;
         }
     }
 
-    .card {
-        .card-header {
-            img {
-                background: white;
-                width: 40%;
-                border-radius: 100%;
-                border: 1px solid #ccc;
-            }
-            p {
-                font-size: 14px;
-                margin: 2px;
-            }
-        }
-        margin-bottom: 20px;
-        .card-block {
-            padding: 15px;
-        }
-    }
+    margin-bottom: 20px;
 
-    .profile-left {
-        width: 100%;
+    .card-block {
+        padding: 15px;
     }
+}
 
-    a.nav-link {
-        color: #000000;
-    }
+.profile-left {
+    width: 100%;
+}
 
-    td {
-        a {
-            i {
-                font-size: 20px;
-            }
+a.nav-link {
+    color: #000000;
+}
+
+td {
+    a {
+        i {
+            font-size: 20px;
         }
     }
+}
 
-    .card-header-profile-picture {
-        height: 115px !important;
-        width: 115px !important;
-    }
+.card-header-profile-picture {
+    height: 115px !important;
+    width: 115px !important;
+}
 </style>

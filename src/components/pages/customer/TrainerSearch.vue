@@ -14,6 +14,9 @@
                         <input list="locationsList" v-validate="'required'" name="city" @keypress="citySearchOnChange"
                             :data-vv-as="$t('Location')" type="text" v-model="city" class="form-control"
                             autocomplete="off">
+                        <div v-if="locationSpinner">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </div>
                         <datalist id="locationsList">
                             <option :key="location.name" v-for="location in locationsList">{{ location.name }}</option>
                         </datalist>
@@ -184,7 +187,8 @@ export default {
             rewards: 0,
             buttonSpin: false,
             user: null,
-            locationsList: null
+            locationsList: null,
+            locationSpinner: false
         };
     },
     created() {
@@ -247,8 +251,12 @@ export default {
                         return;
                     }
 
-                    if (!this.locationsList || !this.locationsList.find(item => item.name == this.city)) {
-                        alert(this.$t('Please a location from dropdown'))
+                    if (!this.locationsList || !this.locationsList.length) {
+                        this.$swal(this.$t('We cant find that location, please try again'))
+                        return;
+                    }
+                    if (!this.locationsList.find(item => item.name == this.city)) {
+                        this.$swal(this.$t('Please choose a location from the dropdown'))
                         return;
                     }
 
@@ -317,10 +325,12 @@ export default {
             }
         },
         citySearchOnChange: debounce(async function (e) {
+            this.locationSpinner = true;
             const client = new AutoComplete(this.city)
             await client.init();
             this.locationsList = client.getLocations()
-        }, 1000),
+            this.locationSpinner = false;
+        }, 500),
         // searchTrainer: async function () {
         //     if (this.trainerSearch.city !== "") {
         //         if(!this.locationsList || !this.locationsList.find(item => item.name == this.trainerSearch.city)){

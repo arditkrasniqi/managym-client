@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
+    currency: process.env.currency,
     user: {
       showConfirmEmail: true,
       auth: null,
@@ -28,6 +29,9 @@ export const store = new Vuex.Store({
   },
   getters: {},
   mutations: {
+    setCurrency: (state, payload) => {
+      state.currency = payload;
+    },
     setActiveUserEmail: (state, payload) => {
       if (state.user.info !== null) {
         state.user.info.emailConfirmed = payload;
@@ -93,6 +97,9 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    setCurrency: ({ commit }, currency) => {
+      commit("setCurrency", currency);
+    },
     setAuth: ({ commit }, auth) => {
       commit("setAuth", auth);
     },

@@ -17,7 +17,9 @@
                             {{ trainer.details.availableTo }}
                         </p>
                         <p v-if="programs.count > 0">
-                            CHF {{ programs.minProgramPrice }}<span v-if="programs.maxProgramPrice != null"> - CHF
+                            {{ currency }} {{ programs.minProgramPrice }}<span v-if="programs.maxProgramPrice != null">
+                                -
+                                {{ currency }}
                                 {{ programs.maxProgramPrice }}</span>
                         </p>
                     </div>
@@ -54,7 +56,9 @@
                             {{ trainer.details.availableTo }}
                         </p>
                         <p v-if="programs.count > 0">
-                            CHF {{ programs.minProgramPrice }}<span v-if="programs.maxProgramPrice != null"> - CHF
+                            {{ currency }} {{ programs.minProgramPrice }}<span v-if="programs.maxProgramPrice != null">
+                                -
+                                {{ currency }}
                                 {{ programs.maxProgramPrice }}</span>
                         </p>
                         <hr>
@@ -205,7 +209,7 @@
                                     <td>{{ program.title }}</td>
                                     <td>{{ program.description }}</td>
                                     <td>{{ program.duration }}</td>
-                                    <td>CHF {{ program.price }}</td>
+                                    <td>{{ currency }} {{ program.price }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -306,11 +310,6 @@ export default {
         this.getTrainerId();
         this.getTrainer();
         this.disabledDatePicker();
-    },
-    computed: {
-        ...mapState({
-            userStore: state => state.user
-        })
     },
     methods: {
         setActiveModule(module) {
@@ -437,6 +436,12 @@ export default {
             let path = document.location.href;
             this.trainerId = path.substr(path.lastIndexOf("/") + 1);
         }
+    },
+    computed: {
+        ...mapState({
+            userStore: state => state.user,
+            currency: state => state.currency
+        })
     }
 };
 </script>

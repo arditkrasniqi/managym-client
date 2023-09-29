@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <div>
         <header-top></header-top>
         <content-page></content-page>
     </div>
@@ -9,7 +9,6 @@
 import HeaderFront from './HeaderFront.vue'
 import ContentFront from './ContentFront.vue'
 import axios from 'axios'
-import config from '../../config'
 
 export default {
     name: "front-page",
@@ -30,9 +29,11 @@ export default {
             this.$validator.validateAll()
                 .then(result => {
                     if (result) {
-                        config.api_data.username = this.username;
-                        config.api_data.password = this.password;
-                        axios.post(config.hostname + '/oauth/token', config.api_data)
+                        const apiData = {
+                            username: this.username,
+                            password: this.password
+                        }
+                        axios.post(process.env.hostname + '/oauth/token', apiData)
                             .then(response => {
                                 vm.data = response;
                                 this.$auth.setToken(response.data.token_type + ' ' + response.data.access_token, response.data.expires_in + Date.now());
@@ -46,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
-main {
+main.guest-main {
     margin-left: 0;
     padding: 0;
 }

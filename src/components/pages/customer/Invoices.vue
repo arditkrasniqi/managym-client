@@ -1,13 +1,13 @@
 <template>
     <div>
-        <h1 class="page-title">{{$t('Invoices')}}</h1>
+        <h1 class="page-title">{{ $t('Invoices') }}</h1>
         <div class="card">
             <div class="card-block">
                 <div class="loader" v-if="typeof invoices == 'string'">
                     <i class="fa fa-spinner fa-spin"></i>
                     <p>
-                        <span>{{$t('Loading invoices')}}...</span>
-                        <span>{{$t('Please wait!')}}</span>
+                        <span>{{ $t('Loading invoices') }}...</span>
+                        <span>{{ $t('Please wait!') }}</span>
                     </p>
                 </div>
                 <div v-else-if="typeof invoices == 'object' && invoices.length > 0">
@@ -17,26 +17,26 @@
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
-                            <tr>
-                                <th>{{$t('Invoice')}}</th>
-                                <th>{{$t('Date')}}</th>
-                                <th>{{$t('Total')}}</th>
-                            </tr>
+                                <tr>
+                                    <th>{{ $t('Invoice') }}</th>
+                                    <th>{{ $t('Date') }}</th>
+                                    <th>{{ $t('Total') }}</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="invoice in invoices" :key="invoice.id">
-                                <td>
-                                    <a :href="storage + invoice.name" target="_blank">{{ invoice.id }}</a>
-                                </td>
-                                <td>{{ invoice.date }}</td>
-                                <td>{{ invoice.total.replace("$","CHF ") }}</td>
-                            </tr>
+                                <tr v-for="invoice in invoices" :key="invoice.id">
+                                    <td>
+                                        <a :href="storage + invoice.name" target="_blank">{{ invoice.id }}</a>
+                                    </td>
+                                    <td>{{ invoice.date }}</td>
+                                    <td>{{ invoice.total.replace("$", `${currency} `) }}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="loader" v-else>
-                    <p>{{$t('No invoices found !')}}</p>
+                    <p>{{ $t('No invoices found !') }}</p>
                 </div>
             </div>
         </div>
@@ -44,54 +44,64 @@
 </template>
 
 <script>
-    import axios from 'axios';
+import { mapState } from 'vuex';
+import axios from 'axios';
 
-    export default {
-        name: "invoices",
-        data(){
-            return {
-                storage:process.env.hostname + '/storage/',
-                invoices:''
-            }
-        },
-        created(){
-            this.getInvoices();
-        },
-        // beforeDestroy(){
-        //     alert('destroying');
-        // },
-        // destroyed(){
-        //     alert('destroyed');
-        // },
-        methods:{
-            getInvoices(){
-                let vm = this;
-                axios.get(process.env.api_hostname + '/invoices')
-                    .then(response => {
-                        vm.invoices = response.data.files;
-                    });
-            }
+export default {
+    name: "invoices",
+    data() {
+        return {
+            storage: process.env.hostname + '/storage/',
+            invoices: ''
         }
+    },
+    created() {
+        this.getInvoices();
+    },
+    // beforeDestroy(){
+    //     alert('destroying');
+    // },
+    // destroyed(){
+    //     alert('destroyed');
+    // },
+    methods: {
+        getInvoices() {
+            let vm = this;
+            axios.get(process.env.api_hostname + '/invoices')
+                .then(response => {
+                    vm.invoices = response.data.files;
+                });
+        }
+    },
+    computed: {
+        ...mapState({
+            currency: state => state.currency
+        })
+    },
 
-    }
+}
 </script>
 
 <style lang="scss">
-    .card-block{
-        padding:20px;
-        .loader{
-            text-align:center;
-            i{
-                font-size:40px;
-            }
-            p{
-                margin-top:20px;
-                color:#8c8c8c;
-                span{
-                    display:block;
-                    margin:3px;
-                }
+.card-block {
+    padding: 20px;
+
+    .loader {
+        text-align: center;
+
+        i {
+            font-size: 40px;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #8c8c8c;
+
+            span {
+                display: block;
+                margin: 3px;
             }
         }
     }
+}
 </style>
